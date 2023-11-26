@@ -3,6 +3,8 @@ include "../model/pdo.php";
 include "../model/loaiphong.php";
 include "../model/phong.php";
 include "../model/dichvu.php";
+include "../model/tienich.php";
+include "../model/giaca.php";
 include "header.php";
 if (isset($_GET['act']) && ($_GET['act'] != "")) {
     $act = $_GET['act'];
@@ -14,8 +16,10 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
 
         case "addlp":
             if (isset($_POST['themmoi']) && ($_POST['themmoi'])) {
+                $idnl = $_POST['idnl'];
+                $idte = $_POST['idte'];
                 $name = $_POST['name'];
-                $gia = $_POST['gia'];
+                $price = $_POST['price'];
                 $img = $_FILES['img']['name'];
                 $target_dir = "../img/type-of-room/";
                 $target_file = $target_dir . basename($_FILES["img"]["name"]);
@@ -24,9 +28,11 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
                 } else {
                     echo "Error: File could not be moved.";
                 }
-                insert_loaiphong($name, $img, $gia);
+                insert_loaiphong($name, $img, $price, $idnl, $idte);
                 $thongbao = "Thêm thành công";
             }
+            $listnguoilon = loadall_nguoilon();
+            $listtreem = loadall_treem();
             include "loaiphong/add.php";
             break;
 
@@ -42,6 +48,8 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
             if (isset($_GET['id']) && ($_GET['id'] > 0)) {
                 $lp = loadone_loaiphong($_GET['id']);
             }
+            $listnguoilon = loadall_nguoilon();
+            $listtreem = loadall_treem();
             include "loaiphong/update.php";
             break;
 
@@ -49,23 +57,30 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
             if (isset($_POST['capnhat']) && ($_POST['capnhat'])) {
                 $name = $_POST['name'];
                 $id = $_POST['id'];
-                $gia = $_POST['gia'];
-                update_loaiphong($id, $name, $gia);
+                $price = $_POST['price'];
+                $idnl = $_POST['idnl'];
+                $idte = $_POST['idte'];
+                $img = $_FILES['img']['name'];
+                $target_dir = "../img/type-of-room/";
+                $target_file = $target_dir . basename($_FILES["img"]["name"]);
+                if (move_uploaded_file($_FILES["img"]["tmp_name"], $target_file)) {
+                    // File moved successfully.
+                } else {
+                    echo "Error: File could not be moved.";
+                }
+                update_loaiphong($id, $name, $img, $price, $idnl, $idte);
                 $thongbao = "cap nhat thanh cong";
             }
             $dsloaiphong = loadall_loaiphong();
+            $listnguoilon = loadall_nguoilon();
+            $listtreem = loadall_treem();
             include "loaiphong/list.php";
             break;
 
         case "addp":
             if (isset($_POST['themmoi']) && $_POST['themmoi']) {
-                $idnl = $_POST['idnl'];
-                $idte = $_POST['idte'];
                 $idlp = $_POST['idlp'];
                 $name = $_POST['name'];
-                $price = $_POST['price'];
-                $checkin = $_POST['checkin'];
-                $checkout = $_POST['checkout'];
                 $mota = $_POST['mota'];
                 $img = $_FILES['img']['name'];
                 $target_dir = "../img/rooms/";
@@ -75,12 +90,10 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
                 } else {
                     echo "Error: File could not be moved.";
                 }
-                insert_phong($name, $price, $img, $idnl, $idte, $idlp, $checkin, $checkout, $mota);
+                insert_phong($name, $img, $idlp, $mota);
                 $thongbao = "Thêm thành công";
             }
             $dsloaiphong = loadall_loaiphong();
-            $listnguoilon = loadall_nguoilon();
-            $listtreem = loadall_treem();
             include "phong/add.php";
             break;
 
@@ -108,21 +121,14 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
                 $p = loadone_phong($_GET['id']);
             }
             $dsloaiphong = loadall_loaiphong();
-            $listnguoilon = loadall_nguoilon();
-            $listtreem = loadall_treem();
             include "phong/update.php";
             break;
 
         case "updatep":
             if (isset($_POST['capnhat']) && ($_POST['capnhat'])) {
                 $id = $_POST['id'];
-                $idnl = $_POST['idnl'];
-                $idte = $_POST['idte'];
                 $idlp = $_POST['idlp'];
                 $name = $_POST['name'];
-                $price = $_POST['price'];
-                $checkin = $_POST['checkin'];
-                $checkout = $_POST['checkout'];
                 $mota = $_POST['mota'];
                 $img = $_FILES['img']['name'];
                 $target_dir = "../img/rooms/";
@@ -132,13 +138,11 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
                 } else {
                     echo "Error: File could not be moved.";
                 }
-                update_phong($id, $name, $price, $img, $idnl, $idte, $idlp, $checkin, $checkout, $mota);
+                update_phong($id, $name, $img, $idlp, $mota);
                 $thongbao = "Thêm thành công";
             }
-            $listphong = loadall_phong($kyw, $idlp);
+            $listphong = loadall_phong(0);
             $dsloaiphong = loadall_loaiphong();
-            $listnguoilon = loadall_nguoilon();
-            $listtreem = loadall_treem();
             include "phong/list.php";
             break;
 
@@ -193,6 +197,108 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
             }
             $dsdichvu = loadall_dvphong();
             include "dichvu/list.php";
+            break;
+
+        case "addti":
+            if (isset($_POST['themmoi']) && ($_POST['themmoi'])) {
+                $name = $_POST['name'];
+                $icon = $_POST['icon'];
+                $mota = $_POST['mota'];
+                insert_tienich($name, $icon, $mota);
+                $thongbao = "Thêm thành công";
+            }
+            include "tienich/add.php";
+            break;
+
+        case "listti":
+            $listtienich = loadall_tienich();
+            include "tienich/list.php";
+            break;
+
+        case "xoati":
+            if (isset($_GET['id']) && ($_GET['id'] > 0)) {
+                delete_tienich($_GET['id']);
+            }
+            $listtienich = loadall_tienich();
+            include "tienich/list.php";
+            break;
+
+        case "suati":
+            if (isset($_GET['id']) && ($_GET['id'] > 0)) {
+                $ti = loadone_tienich($_GET['id']);
+            }
+            include "tienich/update.php";
+            break;
+
+        case "updateti":
+            if (isset($_POST['capnhat']) && ($_POST['capnhat'])) {
+                $id = $_POST['id'];
+                $name = $_POST['name'];
+                $icon = $_POST['icon'];
+                $mota = $_POST['mota'];
+                update_tienich($id, $name, $icon, $mota);
+                $thongbao = "Cập nhật thành công";
+            }
+            $listtienich = loadall_tienich();
+            include "tienich/list.php";
+            break;
+
+        case "addgc":
+            if (isset($_POST['themmoi']) && ($_POST['themmoi'])) {
+                $name = $_POST['name'];
+                $price = $_POST['price'];
+                $img = $_FILES['img']['name'];
+                $target_dir = "../img/pricing/";
+                $target_file = $target_dir . basename($_FILES["img"]["name"]);
+                if (move_uploaded_file($_FILES["img"]["tmp_name"], $target_file)) {
+                    // File moved successfully.
+                } else {
+                    echo "Error: File could not be moved.";
+                }
+                insert_giaca($name, $img, $price);
+                $thongbao = "Thêm thành công";
+            }
+            include "giaca/add.php";
+            break;
+
+        case "listgc":
+            $listgiaca = loadall_giaca();
+            include "giaca/list.php";
+            break;
+
+        case "xoagc";
+            if (isset($_GET['id']) && ($_GET['id'] > 0)) {
+                delete_giaca($_GET['id']);
+            }
+            $listgiaca = loadall_giaca();
+            include "giaca/list.php";
+            break;
+
+        case "suagc";
+            if (isset($_GET['id']) && ($_GET['id'] > 0)) {
+                $gc = loadone_giaca($_GET['id']);
+            }
+            include "giaca/update.php";
+            break;
+
+        case "updategc";
+            if (isset($_POST['capnhat']) && ($_POST['capnhat'])) {
+                $id = $_POST['id'];
+                $name = $_POST['name'];
+                $img = $_FILES['img']['name'];
+                $target_dir = "../img/pricing/";
+                $target_file = $target_dir . basename($_FILES["img"]["name"]);
+                if (move_uploaded_file($_FILES["img"]["tmp_name"], $target_file)) {
+                    // File moved successfully.
+                } else {
+                    echo "Error: File could not be moved.";
+                }
+                $price = $_POST['price'];
+                update_giaca($id, $name, $img, $price);
+                $thongbao = "cap nhat thanh cong";
+            }
+            $listgiaca = loadall_giaca();
+            include "giaca/list.php";
             break;
     }
 } else {

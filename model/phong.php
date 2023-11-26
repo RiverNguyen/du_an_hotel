@@ -1,7 +1,7 @@
 <?php
-function insert_phong($name, $price, $img, $idnl, $idte, $idlp, $checkin, $checkout, $mota)
+function insert_phong($name, $img, $idlp, $mota)
 {
-    $sql = "insert into phong(name, price, img, idnl, idte, idlp, checkin, checkout, mota) values('" . $name . "', '" . $price . "', '" . $img . "', '" . $idnl . "', '" . $idte . "', '" . $idlp . "', '" . $checkin . "', '" . $checkout . "', '" . $mota . "')";
+    $sql = "insert into phong(name, img, idlp, mota) values('" . $name . "', '" . $img . "', '" . $idlp . "', '" . $mota . "')";
     pdo_execute($sql);
 }
 
@@ -11,24 +11,32 @@ function delete_phong($id)
     pdo_query($sql);
 }
 
-function loadname_loaiphong() {
-    $sql = "select lp.name from loaiphong lp join phong p on lp.id = p.idlp";
-    return $listname = pdo_query($sql);
-}
-
 function loadall_phong($idlp = 0)
 {
-    $sql = "select * from phong where 1";
+    $sql = "select phong.idlp 'idlp', phong.id 'idp', phong.name 'nameroom', phong.img 'img', loaiphong.price 'price', loaiphong.name 'nametype', phong.mota from phong inner join loaiphong on loaiphong.id = phong.idlp where 1";
+    if ($idlp > 0) {
+        $sql .= " and phong.idlp = '" . $idlp . "'";
+    }
+    $sql .= " order by phong.id desc";
+    return $listphong = pdo_query($sql);
+}
+
+function loadall_phong_type($kyw = "", $idlp = 0)
+{
+    $sql = "select p.idlp 'idlp', p.id 'idp', p.name 'nameroom', p.img 'img', lp.price 'price', lp.name 'nametype', p.mota from phong p inner join loaiphong lp on lp.id = p.idlp where 1";
+    if ($kyw != "") {
+        $sql .= " and name like '%" . $kyw . "%'";
+    }
     if ($idlp > 0) {
         $sql .= " and idlp = '" . $idlp . "'";
     }
-    $sql .= " order by id desc";
+    $sql .= " order by p.id asc";
     return $listphong = pdo_query($sql);
 }
 
 function loadall_phong_page()
 {
-    $sql = "select * from phong where 1 order by id asc";
+    $sql = "select p.idlp 'idlp', p.id 'idp', p.name 'nameroom', p.img 'img', lp.price 'price', lp.name 'nametype', p.mota from phong p inner join loaiphong lp on lp.id = p.idlp order by p.id asc";
     return $listphong = pdo_query($sql);
 }
 
@@ -60,12 +68,6 @@ function loadall_phong_bieudo($kyw = "", $iddm = 0)
     $sql .= " order by sp.id desc";
     return $listphong = pdo_query($sql);
 }
-function loadall_phong_top10()
-{
-    $sql = "select * from phong where 1 order by luotxem desc limit 0,10";
-
-    return $listphong = pdo_query($sql);
-}
 function loadall_phong_home()
 {
     $sql = "select * from phong where 1 order by id desc limit 0, 15";
@@ -75,23 +77,72 @@ function loadall_phong_home()
 
 function loadone_phong($id)
 {
-    $sql = "select * from phong where id = " . $id;
-    return $sp = pdo_query_one($sql);
+    $sql = "select p.idlp 'idlp', p.id 'idp', p.name 'nameroom', p.img 'img', lp.price 'price', lp.name 'nametype', p.mota from phong p inner join loaiphong lp on lp.id = p.idlp where p.id = " . $id;
+    return $phong = pdo_query_one($sql);
 }
 
-function load_phong_cungloai($id, $iddm)
+function load_phong_cungloai($id, $idlp)
 {
-    $sql = "select * from phong where iddm = " . $iddm . " and id <> " . $id;
+    $sql = "select * from phong where idlp = " . $idlp . " and id <> " . $id;
     return $listphong = pdo_query($sql);
 }
 
-function update_phong($id, $name, $price, $img, $idnl, $idte, $idlp, $checkin, $checkout, $mota)
+function update_phong($id, $name, $img, $idlp, $mota)
 {
-    if ($img != "") {
-        $sql = "update phong set name = '" . $name . "', price = '" . $price . "', img = '" . $img . "', idnl = '" . $idnl . "', idte = '" . $idte . "', idlp = '" . $idlp . "', checkin = '" . $checkin . "', checkout = '" . $checkout . "', mota = '" . $mota . "' where id =" . $id;
+    if($img != "") {
+        $sql = "update phong set name = '" . $name . "', img = '" . $img . "', idlp = '" . $idlp . "', mota = '" . $mota . "' where id =" . $id;
     } else {
-        $sql = "update phong set name = '" . $name . "', price = '" . $price . "', idnl = '" . $idnl . "', idte = '" . $idte . "', idlp = '" . $idlp . "', checkin = '" . $checkin . "', checkout = '" . $checkout . "', mota = '" . $mota . "' where id =" . $id;
+        $sql = "update phong set name = '" . $name . "', idlp = '" . $idlp . "', mota = '" . $mota . "' where id =" . $id;
     }
 
     pdo_execute($sql);
 }
+
+function load_ten_lp($idlp)
+{
+    if ($idlp > 0) {
+        $sql = "select * from loaiphong where id = " . $idlp;
+        $lp = pdo_query_one($sql);
+        extract($lp);
+        return $name;
+    } else {
+        return "";
+    }
+}
+
+function search_empty_room($checkin = "", $checkout = "", $idlp = 0)
+{
+    $sql = "SELECT p.id, p.name, p.img, p.mota, p.price FROM phong p INNER JOIN loaiphong lp on lp.id = p.idlp";
+    if ($idlp > 0) {
+        $sql .= " and p.idlp = '" . $idlp . "'";
+    }
+    if ($checkin != "" && $checkout != "") {
+        $sql .= " AND p.id NOT IN 
+             (SELECT idp FROM bill 
+             WHERE ('$checkin' BETWEEN checkin AND checkout)
+             OR ('$checkout' BETWEEN checkin and checkout)
+             OR (checkin BETWEEN '$checkin' AND '$checkout')
+             OR (checkout BETWEEN '$checkin' AND '$checkout'))";
+    }
+    $sql .= " order by p.id asc";
+    return pdo_query($sql);
+}
+
+// function search_empty_room($checkin = "", $checkout = "", $idlp = 0)
+// {
+//     $sql = "SELECT p.id 'id', p.name 'name', p.price 'price', p.img 'img', p.mota 'mota'  FROM phong p
+//     INNER JOIN loaiphong lp on lp.id = p.idlp";
+//     if ($idlp > 0) {
+//         $sql .= " and p.idlp = '.$idlp.'";
+//     }
+//     if ($checkin != "" && $checkout != "") {
+//         $sql .= " AND p.is_order = 0 AND p.id NOT IN 
+//         (SELECT idp FROM bill 
+//         WHERE ('.$checkin.' BETWEEN checkin AND checkout)
+//         OR ('.$checkout.' BETWEEN checkin and checkout)
+//         OR (checkin BETWEEN '.$checkin.' AND '.$checkout.')
+//         OR (checkout BETWEEN '.$checkin.' AND '.$checkout.'))";
+//     }
+//     $sql .= " order by id desc";
+//     return pdo_query($sql);
+// }

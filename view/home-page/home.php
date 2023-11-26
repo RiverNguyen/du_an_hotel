@@ -77,69 +77,43 @@
     </div>
 </header>
 <!-- Booking Search -->
-<div class="booking-wrapper">
+<div style="left: 10%;" class="booking-wrapper">
     <div class="container">
         <div class="booking-inner clearfix">
-            <form action="https://duruthemes.com/demo/html/BGV/demo1-light/rooms.html" class="form1 clearfix">
-                <div class="col1 c1">
+            <form method="post" action="index.php?act=search" class="form1 clearfix">
+                <div class="col3 c1">
                     <div class="input1_wrapper">
                         <label>Nhận phòng</label>
                         <div class="input1_inner">
-                            <input type="text" class="form-control input datepicker" placeholder="Nhận phòng">
+                            <input type="text" name="checkin" class="form-control input datepicker" placeholder="Nhận phòng">
                         </div>
                     </div>
                 </div>
-                <div class="col1 c2">
+                <div class="col3 c2">
                     <div class="input1_wrapper">
                         <label>Trả phòng</label>
                         <div class="input1_inner">
-                            <input type="text" class="form-control input datepicker" placeholder="Trả phòng">
+                            <input type="text" name="checkout" class="form-control input datepicker" placeholder="Trả phòng">
                         </div>
                     </div>
                 </div>
-                <div class="col2 c3">
-                    <div class="select1_wrapper">
-                        <label>Người lớn</label>
-                        <div class="select1_inner">
-                            <select class="select2 select" style="width: 100%">
-                                <option value="1">Người lớn</option>
-                                <option value="1">1 Người lớn</option>
-                                <option value="2">2 Người lớn</option>
-                                <option value="3">3 Người lớn</option>
-                                <option value="4">4 Người lớn</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col2 c4">
-                    <div class="select1_wrapper">
-                        <label>Trẻ em</label>
-                        <div class="select1_inner">
-                            <select class="select2 select" style="width: 100%">
-                                <option value="1">Trẻ em</option>
-                                <option value="1">1 Trẻ em</option>
-                                <option value="2">2 Trẻ em</option>
-                                <option value="3">3 Trẻ em</option>
-                                <option value="4">4 Trẻ em</option>
-                            </select>
-                        </div>
-                    </div>
-                </div>
-                <div class="col2 c5">
+
+                <div class="col3 c5">
                     <div class="select1_wrapper">
                         <label>Phòng</label>
                         <div class="select1_inner">
-                            <select class="select2 select" style="width: 100%">
-                                <option value="1">1 Phòng</option>
-                                <option value="2">2 Phòng</option>
-                                <option value="3">3 Phòng</option>
-                                <option value="4">4 Phòng</option>
+                            <select name="idlp" class="select2 select" style="width: 100%">
+                                <option value="0">Tất cả</option>
+                                <?php foreach ($listloaiphong as $phong) : ?>
+                                    <?php extract($phong); ?>
+                                    <option value="<?= $id ?>"><?= $name ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>
                 </div>
                 <div class="col3 c6">
-                    <button type="submit" class="btn-form1-submit">Tìm ngay</button>
+                    <input type="submit" name="search" style="height: 62px;" class="btn-form1-submit" value="Tìm Ngay"></input>
                 </div>
             </form>
         </div>
@@ -201,6 +175,7 @@
                 <?php
                 extract($lp);
                 $hinh = $img_lp . $img;
+                $linklp = "index.php?act=room&idlp=" . $id;
                 ?>
                 <?php
                 if ($i == 0 || $i == 1 || $i == 2) {
@@ -211,10 +186,10 @@
                 ?>
                 <div class="<?= $col ?>">
                     <div class="item">
-                        <div class="position-re o-hidden"> <img src="<?= $hinh ?>" alt=""> </div> <span class="category"><a href="rooms2.html">Đặt phòng</a></span>
+                        <div class="position-re o-hidden"><a href="<?= $linklp ?>"><img src="<?= $hinh ?>" alt=""></div></a>
                         <div class="con">
-                            <h6><a href="index.php?act=room-detail"><?= number_format($gia, 0, ',', '.') ?>/ Đêm</a></h6>
-                            <h5><a href="index.php?act=room-detail"><?= $name ?></a> </h5>
+                            <h6><a href="<?= $linklp ?>"><?= number_format($price, 0, ',', '.') ?>/ Đêm</a></h6>
+                            <h5><a href="<?= $linklp ?>"><?= $name ?></a> </h5>
                             <div class="line"></div>
                             <div class="row facilities">
                                 <div class="col col-md-7">
@@ -226,7 +201,7 @@
                                     </ul>
                                 </div>
                                 <div class="col col-md-5 text-end">
-                                    <div class="permalink"><a href="index.php?act=room-detail">Chi tiết <i class="ti-arrow-right"></i></a></div>
+                                    <div class="permalink"><a href="<?= $linklp ?>">Chi tiết <i class="ti-arrow-right"></i></a></div>
                                 </div>
                             </div>
                         </div>
@@ -258,7 +233,25 @@
             </div>
             <div class="col-md-8">
                 <div class="owl-carousel owl-theme">
-                    <div class="pricing-card">
+                    <?php foreach ($listgiaca as $giaca) : ?>
+                        <?php
+                        extract($giaca);
+                        $hinh = $img_gc . $img;
+                        ?>
+                        <div class="pricing-card">
+                            <img src="<?= $hinh ?>" alt="">
+                            <div class="desc">
+                                <div class="name"><?= $name ?></div>
+                                <div class="amount"><?= number_format($price, 0, ',', '.') ?>Đ<span>/ lần</span></div>
+                                <ul class="list-unstyled list">
+                                    <li><i class="ti-check"></i> Dịch vụ đánh giá tốt ở khách sạn</li>
+                                    <li><i class="ti-check"></i> Nhân viên tốt nhất</li>
+                                    <li><i class="ti-check"></i>Khiến khách hàng hài lòng!</li>
+                                </ul>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                    <!-- <div class="pricing-card">
                         <img src="img/pricing/1.jpg" alt="">
                         <div class="desc">
                             <div class="name">Dọn phòng</div>
@@ -305,7 +298,7 @@
                                 <li><i class="ti-check"></i>Khiến khách hàng hài lòng !</li>
                             </ul>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -345,7 +338,18 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4">
+            <?php foreach ($listtienich as $tienich) : ?>
+                <?php extract($tienich); ?>
+                <div class="col-md-4">
+                    <div class="single-facility animate-box" data-animate-effect="fadeInUp">
+                        <span class="<?= $icon ?>"></span>
+                        <h5><?= $name ?></h5>
+                        <p><?= $mota ?></p>
+                        <div class="facility-shape"> <span class="<?= $icon ?>"></span> </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+            <!-- <div class="col-md-4">
                 <div class="single-facility animate-box" data-animate-effect="fadeInUp">
                     <span class="flaticon-world"></span>
                     <h5>Đón & Phục Vụ</h5>
@@ -358,8 +362,10 @@
                 <div class="single-facility animate-box" data-animate-effect="fadeInUp">
                     <span class="flaticon-car"></span>
                     <h5>Chỗ Đậu Xe</h5>
-                    <p>Chúng tôi cam kết cung cấp một dịch vụ chỗ đỗ xe an toàn, thuận tiện và bảo mật để đảm bảo sự
-                        thoải mái và yên tâm cho quý khách.</p>
+                    <p>
+                        Chúng tôi cam kết cung cấp một dịch vụ chỗ đỗ xe an toàn, thuận tiện và bảo mật để đảm bảo sự
+                        thoải mái và yên tâm cho quý khách.
+                    </p>
                     <div class="facility-shape"> <span class="flaticon-car"></span> </div>
                 </div>
             </div>
@@ -377,7 +383,7 @@
                     <span class="flaticon-swimming"></span>
                     <h5>Bể Bơi</h5>
                     <p>Hòa mình vào không gian thư giãn và tận hưởng những khoảnh khắc đáng nhớ tại bể bơi của chúng
-                        tôi tại BGV Hotel</p>
+                        tôi tại BGV Hotel.</p>
                     <div class="facility-shape"> <span class="flaticon-swimming"></span> </div>
                 </div>
             </div>
@@ -398,7 +404,7 @@
                         khởi tại BGV Hotel!</p>
                     <div class="facility-shape"> <span class="flaticon-breakfast"></span> </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
 </section>
@@ -488,15 +494,15 @@
                         <div class="info">
                             <h6>KINH NGHIỆM</h6>
                         </div>
-                        <h4>'.$name.'</h4>
-                        <p>'. $mota .'</p>
-                        <div class="butn-dark"> <a href="spa-wellness.html"><span>Tìm hiểu thêm</span></a> </div>
+                        <h4>' . $name . '</h4>
+                        <p>' . $mota . '</p>
+                        <div class="butn-dark"> <a href="index.php?act=spa"><span>Tìm hiểu thêm</span></a> </div>
                     </div>
                 </div>
             </div>';
                 $item_right = '<div class="col-md-6 p-0 order1 animate-box" data-animate-effect="' . $item_right_animation . '">
                 <div class="img">
-                    <a href="spa-wellness.html"><img src="' . $hinh . '" alt=""></a>
+                    <a href="index.php?act=spa"><img src="' . $hinh . '" alt=""></a>
                 </div>
             </div>';
             } else {
@@ -508,15 +514,15 @@
                         <div class="info">
                             <h6>KINH NGHIỆM</h6>
                         </div>
-                        <h4>'.$name.'</h4>
-                        <p>'. $mota .'</p>
-                        <div class="butn-dark"><a href="spa-wellness.html"><span>Tìm hiểu thêm</span></a> </div>
+                        <h4>' . $name . '</h4>
+                        <p>' . $mota . '</p>
+                        <div class="butn-dark"><a href="index.php?act=spa"><span>Tìm hiểu thêm</span></a> </div>
                     </div>
                 </div>
             </div>';
                 $item_left = '<div class="col-md-6 p-0 order1 animate-box" data-animate-effect="' . $item_left_animation . '">
                 <div class="img">
-                    <a href="spa-wellness.html"><img src="' . $hinh . '" alt=""></a>
+                    <a href="index.php?act=spa"><img src="' . $hinh . '" alt=""></a>
                 </div>
             </div>';
             }
@@ -650,13 +656,13 @@
                             <h4>Đặt Phòng Khách Sạn</h4>
                         </div>
                         <div class="booking-inner clearfix">
-                            <form action="https://duruthemes.com/demo/html/BGV/demo1-light/rooms2.html" class="form1 clearfix">
+                            <form method="post" action="index.php?act=search" class="form1 clearfix">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="input1_wrapper">
                                             <label>Nhận phòng</label>
                                             <div class="input1_inner">
-                                                <input type="text" class="form-control input datepicker" placeholder="Nhận phòng">
+                                                <input type="text" name="checkin" class="form-control input datepicker" placeholder="Nhận phòng">
                                             </div>
                                         </div>
                                     </div>
@@ -664,40 +670,26 @@
                                         <div class="input1_wrapper">
                                             <label>Trả phòng</label>
                                             <div class="input1_inner">
-                                                <input type="text" class="form-control input datepicker" placeholder="Trả phòng">
+                                                <input type="text" name="checkout" class="form-control input datepicker" placeholder="Trả phòng">
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-12">
                                         <div class="select1_wrapper">
-                                            <label>Người lớn</label>
+                                            <label>Phòng</label>
                                             <div class="select1_inner">
-                                                <select class="select2 select" style="width: 100%">
-                                                    <option value="0">Người lớn</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <option value="4">4</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="select1_wrapper">
-                                            <label>Trẻ em</label>
-                                            <div class="select1_inner">
-                                                <select class="select2 select" style="width: 100%">
-                                                    <option value="0">Trẻ em</option>
-                                                    <option value="1">1</option>
-                                                    <option value="2">2</option>
-                                                    <option value="3">3</option>
-                                                    <option value="4">4</option>
+                                                <select name="idlp" class="select2 select" style="width: 100%">
+                                                    <option value="0">Tất cả</option>
+                                                    <?php foreach ($listloaiphong as $phong) : ?>
+                                                        <?php extract($phong); ?>
+                                                        <option value="<?= $id ?>"><?= $name ?></option>
+                                                    <?php endforeach; ?>
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <button type="submit" class="btn-form1-submit mt-15">Kiểm Tra</button>
+                                        <button type="submit" class="btn-form1-submit mt-15">Tìm ngay</button>
                                     </div>
                                 </div>
                             </form>

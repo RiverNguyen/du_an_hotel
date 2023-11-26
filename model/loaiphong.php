@@ -1,8 +1,8 @@
 <?php
 
-function insert_loaiphong($name, $img, $gia)
+function insert_loaiphong($name, $img, $price, $idnl, $idte)
 {
-    $sql = "insert into loaiphong(name, img, gia) values('$name', '$img', '$gia')";
+    $sql = "insert into loaiphong(name, img, price, idnl, idte) values('" . $name . "', '" . $img . "', '" . $price . "', '" . $idnl . "', '" . $idte . "')";
     pdo_execute($sql);
 }
 function delete_loaiphong($id)
@@ -28,8 +28,12 @@ function loadone_loaiphong($id)
     $dm = pdo_query_one($sql);
     return $dm;
 }
-function update_loaiphong($id, $name, $gia)
+function update_loaiphong($id, $name, $img, $price, $idnl, $idte)
 {
-    $sql = "update loaiphong set name='" . $name . "',gia='" . $gia . "' where id=" . $id;
+    if($img != "") {
+        $sql = "update loaiphong set name = '" . $name . "', img = '" . $img . "', price = '" . $price . "', idnl = '" . $idnl . "', idte = '" . $idte . "' where id =" . $id;
+    } else {
+        $sql = "update loaiphong set name = '" . $name . "', price = '" . $price . "', idnl = '" . $idnl . "', idte = '" . $idte . "' where id =" . $id;
+    }
     pdo_execute($sql);
 }

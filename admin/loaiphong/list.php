@@ -15,6 +15,8 @@
         <th style="text-align: center;">Tên loại phòng</th>
         <th style="text-align: center;">Ảnh</th>
         <th style="text-align: center;">Giá</th>
+        <th style="text-align: center;">Số người lớn</th>
+        <th style="text-align: center;">Số trẻ em</th>
         <th style="text-align: center;">Action</th>
       </tr>
     </thead>
@@ -27,7 +29,7 @@
         $modalId = "exampleModal" . $id;
         $imgpath = "../img/type-of-room/" . $img;
         if (is_file($imgpath)) {
-          $hinh = "<img src='" . $imgpath . "' style='height: 160px; width: 120px; margin: auto;'>";
+          $hinh = "<img src='" . $imgpath . "' style='height: 160px; width: 140px; margin: auto;'>";
         } else {
           $hinh = "no photo";
         }
@@ -35,7 +37,9 @@
                       <td>' . $id . '</td>
                       <td>' . $name . '</td>
                       <td>' . $hinh . '</td>
-                      <td>' . number_format($gia, 0, ',', '.') . 'đ</td>
+                      <td>' . number_format($price, 0, ',', '.') . 'đ</td>
+                      <td>' . $idnl . '</td>
+                      <td>' . $idte . '</td>
                       <td>
                         <a href="' . $sualp . '"><input type="button" style="color: #fff; background-color: #0d6efd"  class="btn btn-primary" value="Sửa"></a>   
                        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#' . $modalId . '">
