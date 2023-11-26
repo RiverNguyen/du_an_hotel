@@ -9,12 +9,9 @@
     <link rel="shortcut icon" href="../img/favicon.png" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow&amp;family=Barlow+Condensed&amp;family=Gilda+Display&amp;display=swap">
     <link rel="stylesheet" href="../css/plugins.css" />
-    <link rel="stylesheet" href="../css/style.css"/>
+    <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/more-css.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
-
-
-
     <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css" rel="stylesheet">
 
@@ -43,12 +40,30 @@
             <div class="collapse navbar-collapse" id="navbar">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item"><a class="nav-link" href="index.php">Trang chủ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php?act=addlp">Loại Phòng</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php?act=addp">Phòng</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php?act=adddv">Dịch vụ</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php?act=dskh">Khách hàng</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php?act=dsbl">Bình Luận</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php?act=thongke">Thống kê</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="index.php?act=addlp" role="button" data-bs-auto-close="outside" aria-expanded="false">Loại Phòng
+                            <i class="ti-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="index.php?act=addp" class="dropdown-item"><span>Phòng</span></a></li>
+                        </ul>
+                    </li>
+
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="index.php?act=adddv" role="button" data-bs-auto-close="outside" aria-expanded="false">Dịch vụ
+                            <i class="ti-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="index.php?act=addti" class="dropdown-item"><span>Tiện ích</span></a></li>
+                            <li><a href="index.php?act=addgc" class="dropdown-item"><span>Giá cả</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="index.php?act=dskh" role="button" data-bs-auto-close="outside" aria-expanded="false">Khách hàng
+                            <i class="ti-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="index.php?act=dsbl" class="dropdown-item"><span>Bình Luận</span></a></li>
+                            <li><a href="index.php?act=thongke" class="dropdown-item"><span>Thống kê</span></a></li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>

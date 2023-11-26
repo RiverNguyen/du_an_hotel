@@ -12,7 +12,7 @@
                  </span>
                  <h5>The BGV Luxury Hotel</h5>
 
-                 <h1>Phòng & Suites</h1>
+                 <h1><?= $namelp ?></h1>
 
              </div>
          </div>
@@ -67,12 +67,13 @@
  <div style="padding: 80px 0;" class="rooms3 section-padding">
      <div class="container">
          <div class="row">
-             <?php foreach ($listphong as $phong) : ?>
+             <?php foreach ($dsroom as $listroom) : ?>
                  <?php
-                    extract($phong);
-                    $linkroom = "index.php?act=room-detail&idroom=" . $idp;
+                    extract($listroom);
+                    $linkroom = "index.php?act=room-detail&idroom=" . $id;
                     $hinh = $img_p . $img;
                     ?>
+
                  <div class="col-md-4">
                      <div class="square-flip">
                          <div class="square bg-img" data-background="<?= $hinh ?>">

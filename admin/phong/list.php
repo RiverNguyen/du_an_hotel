@@ -8,8 +8,7 @@
     </div>
 </div>
 <form action="index.php?act=listp" method="post" class="row g-3">
-    <input type="text" name="kyw" id="" class="form-control">
-    <div style="margin-left: 260px; margin-top: 40px" class="col-lg-1">
+    <div style="margin-left: 350px; margin-top: 40px" class="col-lg-1">
         <select style="height: 40px" name="idlp" id="" class="form-control">
             <option value="0" selected>Tất Cả</option>
             <?php foreach ($dsloaiphong as $loaiphong) : ?>
@@ -27,13 +26,10 @@
         <thead>
             <tr>
                 <th style="text-align: center;">Mã phòng</th>
+                <th style="text-align: center;">Tên loại phòng</th>
                 <th style="text-align: center;">Tên phòng</th>
-                <th style="text-align: center;">Ảnh</th>
                 <th style="text-align: center;">Giá</th>
-                <th style="text-align: center;">Người lớn</th>
-                <th style="text-align: center;">Trẻ em</th>
-                <th style="text-align: center;">Check in</th>
-                <th style="text-align: center;">Check out</th>
+                <th style="text-align: center;">Ảnh</th>
                 <th style="text-align: center;">Mô tả</th>
                 <th style="text-align: center;">Action</th>
             </tr>
@@ -42,25 +38,22 @@
             <?php foreach ($listphong as $phong) : ?>
                 <?php
                 extract($phong);
-                $suap = "index.php?act=suap&id=" . $id;
-                $xoap = "index.php?act=xoap&id=" . $id;
-                $modalId = "exampleModal" . $id;
+                $suap = "index.php?act=suap&id=" . $idp;
+                $xoap = "index.php?act=xoap&id=" . $idp;
+                $modalId = "exampleModal" . $idp;
                 $imgpath = "../img/rooms/" . $img;
                 if (is_file($imgpath)) {
-                    $hinh = "<img src='" . $imgpath . "' style='height: 80px;'>";
+                    $hinh = "<img src='" . $imgpath . "' style='height: 160px;'>";
                 } else {
                     $hinh = "no photo";
                 }
                 ?>
                 <tr>
-                    <td><?= $id ?></td>
-                    <td><?= $name ?></td>
+                    <td><?= $idp ?></td>
+                    <td><?= $nametype ?></td>
+                    <td><?= $nameroom ?></td>
+                    <td><?= number_format($price, 0, ',', '.') ?>Đ</td>
                     <td><?= $hinh ?></td>
-                    <td><?= number_format($price, 0, ',', '.') ?>đ</td>
-                    <td><?= $idnl ?> </td>
-                    <td><?= $idte ?> </td>
-                    <td><?= date('d/m/Y', strtotime($checkin)) ?></td>
-                    <td><?= date('d/m/Y', strtotime($checkout)) ?></td>
                     <td><?= $mota ?> </td>
                     <td>
                         <a href="<?= $suap ?>"><input style="color: #fff; background-color: #0d6efd" type="button" value="Sửa" class="btn btn-primary"></a>

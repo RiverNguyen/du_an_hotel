@@ -3,18 +3,18 @@
   <div class="container">
     <div class="row">
       <h1>ADMIN</h1>
-      <h5>Quản lí loại phòng</h5>
+      <h5>Quản lí giá cả</h5>
     </div>
   </div>
 </div>
 
 <div class="container my-5">
-  <form action="index.php?act=addlp" method="POST" enctype="multipart/form-data">
+  <form action="index.php?act=addgc" method="POST" enctype="multipart/form-data">
     <div class="space-y-12">
       <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
         <div class="sm:col-span-full">
-          <label for="" class="block text-sm font-medium leading-6 text-gray-900">Tên loại phòng:</label>
-          <input style="padding-left: 12px;" type="text" name="name" id="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Nhập tên loại phòng...">
+          <label for="" class="block text-sm font-medium leading-6 text-gray-900">Tên giá cả:</label>
+          <input style="padding-left: 12px;" type="text" name="name" id="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Nhập tên...">
         </div>
       </div>
     </div>
@@ -41,34 +41,11 @@
         <div class="sm:col-span-full">
           <label for="" class="block text-sm font-medium leading-6 text-gray-900">Giá:</label>
           <div class="mt-2">
-            <input style="padding-left: 12px;" type="text" name="price" id="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-          </div>
-        </div>
-        <div class="sm:col-span-3">
-          <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Người lớn:</label>
-          <div class="mt-2">
-            <select style="padding-left: 12px; padding-right: 12px; height: 36px;" name="idnl" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-              <?php foreach ($listnguoilon as $nguoilon) : ?>
-                <?php extract($nguoilon); ?>
-                <option value="<?= $id ?>"><?= $soluong ?></option>
-              <?php endforeach ?>
-            </select>
-          </div>
-        </div>
-        <div class="sm:col-span-3">
-          <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Trẻ em:</label>
-          <div class="mt-2">
-            <select style="padding-left: 12px; padding-right: 12px; height: 36px;" name="idte" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-              <?php foreach ($listtreem as $treem) : ?>
-                <?php extract($treem); ?>
-                <option value="<?= $id ?>"><?= $soluong ?></option>
-              <?php endforeach ?>
-            </select>
+            <input style="padding-left: 12px;" type="text" name="price" id="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Nhập giá...">
           </div>
         </div>
       </div>
     </div>
-
 
     <div class="mt-6 flex items-center justify-end gap-x-6">
       <div class="text-danger bold">
@@ -79,7 +56,7 @@
         ?>
       </div>
       <button type="reset" class="text-sm font-semibold leading-6 text-gray-900">Nhập lại</button>
-      <a href="index.php?act=listlp"><input class="text-sm font-semibold leading-6 text-gray-900" type="button" value="Danh sách"></a>
+      <a href="index.php?act=listgc"><input class="text-sm font-semibold leading-6 text-gray-900" type="button" value="Danh sách"></a>
       <input type="submit" style="background-color: #aa8453; text-transform: none; font-family: inherit; letter-spacing: 0;" name="themmoi" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"></input>
     </div>
 

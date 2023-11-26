@@ -5,7 +5,7 @@ if (is_array($p)) {
 
 $imgpath = "../img/rooms/" . $img;
 if (is_file($imgpath)) {
-    $hinh = "<img src='" . $imgpath . "' style='height: 160px;'>";
+    $hinh = "<img src='" . $imgpath . "' style='height: 160px; width: 120px; margin: auto;'>";
 } else {
     $hinh = "no photo";
 }
@@ -65,51 +65,6 @@ if (is_file($imgpath)) {
 
         <div class="border-b border-gray-900/10 pb-12">
             <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                <div class="sm:col-span-full">
-                    <label for="" class="block text-sm font-medium leading-6 text-gray-900">Giá:</label>
-                    <div class="mt-2">
-                        <input style="padding-left: 12px;" value="<?= $price ?>" type="text" name="price" id="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                    </div>
-                </div>
-                <div class="sm:col-span-3">
-                    <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Người lớn:</label>
-                    <div class="mt-2">
-                        <select style="padding-left: 12px; padding-right: 12px; height: 36px;" name="idnl" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                            <?php foreach ($listnguoilon as $nguoilon) : ?>
-                                <?php if ($idnl == $nguoilon['id']) $s = "selected";
-                                else $s = ""; ?>
-                                <option value="<?= $nguoilon['id'] ?>" <?= $s ?>><?= $nguoilon['soluong'] ?></option>
-                            <?php endforeach ?>
-                        </select>
-                    </div>
-                </div>
-                <div class="sm:col-span-3">
-                    <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Trẻ em:</label>
-                    <div class="mt-2">
-                        <select style="padding-left: 12px; padding-right: 12px; height: 36px;" name="idte" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                            <?php foreach ($listtreem as $treem) : ?>
-                                <?php if ($idte == $treem['id']) $s = "selected";
-                                else $s = ""; ?>
-                                <option value="<?= $treem['id'] ?>" <?= $s ?>><?= $treem['soluong'] ?></option>
-                            <?php endforeach ?>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="sm:col-span-3">
-                    <label for="last-name" class="block text-sm font-medium leading-6 text-gray-900">Check In:</label>
-                    <div class="mt-2">
-                        <input style="padding-left: 12px; padding-right: 12px;" value="<?= $checkin ?>" type="date" name="checkin" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                    </div>
-                </div>
-
-                <div class="sm:col-span-3">
-                    <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Check Out:</label>
-                    <div class="mt-2">
-                        <input style="padding-left: 12px; padding-right: 12px;" value="<?= $checkout ?>" name="checkout" type="date" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" pattern="\d{1,2}/\d{1,2}/\d{4}">
-                    </div>
-                </div>
-
                 <div class="col-span-full">
                     <label for="street-address" class="block text-sm font-medium leading-6 text-gray-900">Mô tả:</label>
                     <div class="mt-2">
