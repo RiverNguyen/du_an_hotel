@@ -4,7 +4,7 @@
         <div class="row">
             <div class="col-md-12 text-left caption mt-90">
                 <h5>Đăng Nhập</h5>
-                <h1>Đăng Nhập tài khoản</h1>
+                <h1>Đăng nhập tài khoản</h1>
             </div>
         </div>
     </div>
@@ -58,6 +58,11 @@
 
                     </div>
                 </form>
+                <br>
+                <div class="text">
+                    <p>Bạn chưa có toàn khoản ? <a href="index.php?act=sign-up" style="color: #AA8453;" class="bold">Đăng kí tại đây</a></p>
+                    <p style="margin-top: -12px;">Bạn quên mật khẩu ? <a href="index.php?act=forgot-pass" style="color: #AA8453;" class="bold">Tìm lại mật khẩu tại đây</a></p>
+                </div>
                 <br>
                 <div class="text-danger bold">
                     <?php

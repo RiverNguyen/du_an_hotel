@@ -5,6 +5,7 @@ include "../model/phong.php";
 include "../model/dichvu.php";
 include "../model/tienich.php";
 include "../model/giaca.php";
+include "../model/user.php";
 include "header.php";
 if (isset($_GET['act']) && ($_GET['act'] != "")) {
     $act = $_GET['act'];
@@ -299,6 +300,19 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
             }
             $listgiaca = loadall_giaca();
             include "giaca/list.php";
+            break;
+
+        case "list-account":
+            $listAccount = loadall_taikhoan();
+            include "taikhoan/list.php";
+            break;
+
+        case "del-account";
+            if (isset($_GET['id']) && ($_GET['id'] > 0)) {
+                delete_taikhoan($_GET['id']);
+            }
+            $listAccount = loadall_taikhoan();
+            include "taikhoan/list.php";
             break;
     }
 } else {

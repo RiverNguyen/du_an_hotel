@@ -19,7 +19,7 @@ function checkemail($email)
     return $tk;
 }
 
-function update_taikhoan($id, $user, $name, $email, $pass, $address, $tel)
+function update_account($id, $user, $name, $email, $pass, $address, $tel)
 {
     $sql = "update taikhoan set user = '" . $user . "', name = '" . $name . "', pass = '" . $pass . "', email = '" . $email . "', address = '" . $address . "', tel = '" . $tel . "' where id =" . $id;
 
@@ -29,6 +29,12 @@ function update_matkhau($id, $user, $email, $pass)
 {
     $sql = "update taikhoan set user = '" . $user . "', pass = '" . $pass . "', email = '" . $email . "' where id =" . $id;
 
+    pdo_execute($sql);
+}
+
+function forgot_pass($email, $pass)
+{
+    $sql = "update taikhoan set pass = '" . $pass . "' where email = '" . $email . "'";
     pdo_execute($sql);
 }
 

@@ -2,6 +2,8 @@
 extract($room);
 $img = $img_p . $img;
 $modalId = "exampleModal" . $id;
+
+
 ?>
 <!-- Room Page Slider -->
 <header class="header slider">
@@ -17,7 +19,7 @@ $modalId = "exampleModal" . $id;
     </div>
 </header>
 <!-- Room Content -->
-<section class="rooms-page section-padding" data-scroll-index="1">
+<section class="rooms-page section-padding" style="padding-bottom: 0px;" data-scroll-index="1">
     <div class="container">
 
         <!-- project content -->
@@ -159,6 +161,17 @@ $modalId = "exampleModal" . $id;
         </div>
     </div>
 </section>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $("#comment").load("view/comment/comment-form.php", {
+            idroom: <?= $id ?>
+        });
+    });
+</script>
+<div id="comment">
+
+</div>
 <!-- Similiar Room -->
 <section class="rooms1 section-padding bg-blck">
     <div class="container">

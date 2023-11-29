@@ -3,8 +3,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12 text-left caption mt-90">
-                <h5>Đăng Ký</h5>
-                <h1>Đăng ký tài khoản</h1>
+                <h5>Chức năng</h5>
+                <h1>Quên mật khẩu</h1>
             </div>
         </div>
     </div>
@@ -40,36 +40,18 @@
                 </div>
             </div>
             <div class="col-md-5 mb-30 offset-md-1">
-                <h3>Đăng ký tài khoản</h3>
-                <form method="post" action="index.php?act=sign-up">
+                <h3>Quên mật khẩu</h3>
+                <form method="post" action="index.php?act=forgot-pass">
                     <!-- form elements -->
                     <div class="row">
-                        <div class="col-md-6 form-group">
-                            <input name="user" type="text" placeholder="Tên tài khoản *">
-                        </div>
-
-                        <div class="col-md-6 form-group">
-                            <input name="pass" type="password" placeholder="Mật khẩu *">
-                        </div>
 
                         <div class="col-md-6 form-group">
                             <input name="email" type="text" placeholder="Email *">
                         </div>
 
-                        <div class="col-md-6 form-group">
-                            <input name="name" type="text" placeholder="Họ và tên *">
-                        </div>
-
-                        <div class="col-md-6 form-group">
-                            <input name="tel" type="text" placeholder="Số điện thoại *">
-                        </div>
-
-                        <div class="col-md-6 form-group">
-                            <input name="address" type="text" placeholder="Địa chỉ *">
-                        </div>
-
                         <div class="col-md-6">
-                            <input type="submit" class="butn-dark2" name="dangky" value="Đăng ký">
+                            <input type="hidden" name="id" value="<?= $id ?>">
+                            <input type="submit" class="butn-dark2" name="forgot" value="Send mail">
                         </div>
 
                     </div>
@@ -77,16 +59,14 @@
                 <br>
                 <div class="text">
                     <p>Bạn đã có toàn khoản ? <a href="index.php?act=sign-in" style="color: #AA8453;" class="bold">Đăng nhập tại đây</a></p>
-                    <p style="margin-top: -12px;">Bạn quên mật khẩu ? <a href="index.php?act=forgot-pass" style="color: #AA8453;" class="bold">Tìm lại mật khẩu tại đây</a></p>
+                    <p style="margin-top: -12px;">Bạn chưa có toàn khoản ? <a href="index.php?act=sign-up" style="color: #AA8453;" class="bold">Đăng kí tại đây</a></p>
                 </div>
                 <br>
-                <div class="text-danger bold">
-                    <?php
-                    if (isset($thongbao) && ($thongbao != "")) {
-                        echo $thongbao;
-                    }
-                    ?>
-                </div>
+                <?php if (isset($error['fail'])) : ?>
+                    <div class="alert alert-danger">
+                        <strong><?= $error['fail'] ?></strong>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
 
