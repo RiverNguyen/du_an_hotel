@@ -57,7 +57,7 @@
                         </ul>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="index.php?act=dskh" role="button" data-bs-auto-close="outside" aria-expanded="false">Khách hàng
+                        <a class="nav-link dropdown-toggle" href="index.php?act=list-account" role="button" data-bs-auto-close="outside" aria-expanded="false">Khách hàng
                             <i class="ti-angle-down"></i></a>
                         <ul class="dropdown-menu">
                             <li><a href="index.php?act=dsbl" class="dropdown-item"><span>Bình Luận</span></a></li>

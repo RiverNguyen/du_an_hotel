@@ -3,8 +3,8 @@
     <div class="container">
         <div class="row">
             <div class="col-md-12 text-left caption mt-90">
-                <h5>Đăng Ký</h5>
-                <h1>Đăng ký tài khoản</h1>
+                <h5>Cập Nhật</h5>
+                <h1>Cập nhật tài khoản</h1>
             </div>
         </div>
     </div>
@@ -40,45 +40,46 @@
                 </div>
             </div>
             <div class="col-md-5 mb-30 offset-md-1">
-                <h3>Đăng ký tài khoản</h3>
-                <form method="post" action="index.php?act=sign-up">
+                <h3>Cập nhật tài khoản</h3>
+                <?php 
+                    if(isset($_SESSION['user']) && is_array($_SESSION['user'])) {
+                        extract($_SESSION['user']);
+                    }
+                ?>
+                <form method="post" action="index.php?act=edit-account">
                     <!-- form elements -->
                     <div class="row">
                         <div class="col-md-6 form-group">
-                            <input name="user" type="text" placeholder="Tên tài khoản *">
+                            <input name="user" type="text" value="<?= $user ?>" placeholder="Tên tài khoản *">
                         </div>
 
                         <div class="col-md-6 form-group">
-                            <input name="pass" type="password" placeholder="Mật khẩu *">
+                            <input name="pass" type="password" value="<?= $pass ?>" placeholder="Mật khẩu *">
                         </div>
 
                         <div class="col-md-6 form-group">
-                            <input name="email" type="text" placeholder="Email *">
+                            <input name="email" type="text" value="<?= $email ?>" placeholder="Email *">
                         </div>
 
                         <div class="col-md-6 form-group">
-                            <input name="name" type="text" placeholder="Họ và tên *">
+                            <input name="name" type="text" value="<?= $name ?>" placeholder="Họ và tên *">
                         </div>
 
                         <div class="col-md-6 form-group">
-                            <input name="tel" type="text" placeholder="Số điện thoại *">
+                            <input name="tel" type="text" value="<?= $tel ?>" placeholder="Số điện thoại *">
                         </div>
 
                         <div class="col-md-6 form-group">
-                            <input name="address" type="text" placeholder="Địa chỉ *">
+                            <input name="address" type="text" value="<?= $address ?>" placeholder="Địa chỉ *">
                         </div>
 
                         <div class="col-md-6">
-                            <input type="submit" class="butn-dark2" name="dangky" value="Đăng ký">
+                            <input type="hidden" name="id" value="<?= $id ?>">
+                            <input type="submit" class="butn-dark2" name="update" value="Lưu">
                         </div>
 
                     </div>
                 </form>
-                <br>
-                <div class="text">
-                    <p>Bạn đã có toàn khoản ? <a href="index.php?act=sign-in" style="color: #AA8453;" class="bold">Đăng nhập tại đây</a></p>
-                    <p style="margin-top: -12px;">Bạn quên mật khẩu ? <a href="index.php?act=forgot-pass" style="color: #AA8453;" class="bold">Tìm lại mật khẩu tại đây</a></p>
-                </div>
                 <br>
                 <div class="text-danger bold">
                     <?php
@@ -212,4 +213,4 @@
             </div>
         </div>
     </div>
-</section>
+</section>  

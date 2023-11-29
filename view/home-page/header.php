@@ -99,7 +99,7 @@
                         <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-auto-close="outside" aria-expanded="false">Xin chào, <?= $name ?> <i class="ti-angle-down"></i></a>
                             <ul class="dropdown-menu">
                                 <li><a href="index.php?act=forgot-pass" class="dropdown-item"><span>Quên mật khẩu</span></a></li>
-                                <li><a href="index.php?act=edit-user" class="dropdown-item"><span>Cập nhật tài khoản</span></a></li>
+                                <li><a href="index.php?act=edit-account" class="dropdown-item"><span>Cập nhật tài khoản</span></a></li>
                                 <?php if ($role == 1) : ?>
                                     <li><a href="admin/index.php" class="dropdown-item"><span>Đăng nhập Admin</span></a></li>
                                 <?php endif; ?>
@@ -109,8 +109,12 @@
                     <?php
                     } else {
                     ?>
-                        <li class="nav-item"><a class="nav-link" href="index.php?act=sign-up">Đăng kí</a></li>
-                        <li class="nav-item"><a class="nav-link" href="index.php?act=sign-in">Đăng nhập</a></li>
+                        <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="index.php?act=sign-in" role="button" data-bs-auto-close="outside" aria-expanded="false">Đăng nhập<i class="ti-angle-down"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="index.php?act=sign-up" class="dropdown-item"><span>Đăng kí</span></a></li>
+                                <li><a href="index.php?act=forgot-pass" class="dropdown-item"><span>Quên mật khẩu</span></a></li>
+                            </ul>
+                        </li>
                     <?php
                     }
                     ?>
