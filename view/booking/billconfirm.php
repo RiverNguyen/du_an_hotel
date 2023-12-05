@@ -16,35 +16,31 @@ if (isset($bill) && is_array($bill)) {
     <div class="space-y-12">
         <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div class="sm:col-span-full">
-                <h3>Mã đơn hàng: <?= $bill['id']; ?></h3>
-                <label>Ngày đặt lịch: <?= $bill['daybook'] ?></label>
+                <label for="country" style="font-size: 24px;" class="block text-sm font-medium leading-6 text-gray-900">Mã đơn hàng: <?= $bill['id']; ?></label>
             </div>
         </div>
     </div>
-
-    <div class="border-b border-gray-900/10 pb-12">
-        <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div class="sm:col-span-full">
-                <label>Người đặt lịch: <?= $bill['bill_name']; ?></label>
-            </div>
-
-            <div class="sm:col-span-full">
-                <label for="" class="block text-sm font-medium leading-6 text-gray-900">Địa chỉ: <?= $bill['bill_address']; ?></label>
-            </div>
-
-            <div class="sm:col-span-full">
-                <label for="" class="block text-sm font-medium leading-6 text-gray-900">Số điện thoại: <?= $bill['bill_tel']; ?></label>
-
-            </div>
-
-            <div class="sm:col-span-full">
-                <label for="" class="block text-sm font-medium leading-6 text-gray-900">Ngày nhận phòng: <?= date("d/m/Y", strtotime($bill['checkin'])); ?></label>
-
-            </div>
-
-            <div class="sm:col-span-full">
-                <label for="" class="block text-sm font-medium leading-6 text-gray-900">Ngày trả phòng: <?= date("d/m/Y", strtotime($bill['checkout'])) ?></label>
-
+    <div class="space-y-12">
+        <div class="border-b border-gray-900/10 pb-12">
+            <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                <div class="sm:col-span-3">
+                    <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Người đặt lịch: <?= $bill['bill_name']; ?></label>
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Ngày đặt lịch: <?= $bill['daybook'] ?></label>
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Địa chỉ: <?= $bill['bill_address']; ?></label>
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Số điện thoại: <?= $bill['bill_tel']; ?></label>
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Ngày nhận phòng: <?= date("d/m/Y", strtotime($bill['checkin'])); ?></label>
+                </div>
+                <div class="sm:col-span-3">
+                    <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Ngày trả phòng: <?= date("d/m/Y", strtotime($bill['checkout'])) ?></label>
+                </div>
             </div>
         </div>
     </div>

@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="col-md-5 mb-30 offset-md-1">
-                <h3>Nhập mã xác nhận:</h3>
+                <h3 class="mb-3">Nhập mã xác nhận:</h3>
                 <form method="post" action="index.php?act=verification">
                     <!-- form elements -->
                     <div class="row">

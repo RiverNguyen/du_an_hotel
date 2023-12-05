@@ -1,4 +1,9 @@
 <?php
+ob_start();
+session_start();
+if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != 1) {
+    header('Location: ../index.php');
+}
 include "../model/pdo.php";
 include "../model/loaiphong.php";
 include "../model/phong.php";
@@ -6,13 +11,42 @@ include "../model/dichvu.php";
 include "../model/tienich.php";
 include "../model/giaca.php";
 include "../model/user.php";
+include "../model/comment.php";
+include "../model/booking.php";
+include "../model/thongke.php";
 include "header.php";
+$phongdat = load_sophongdat();
+$phongtrong = load_sophongtrong();
+$taikhoan = load_sotaikhoan();
+$tien = load_tien();
+$binhluan = load_binhluan();
+$bill = load_bill_count();
 if (isset($_GET['act']) && ($_GET['act'] != "")) {
     $act = $_GET['act'];
     switch ($act) {
+        case 'sophongdat':
+            $phongdat = loadall_sophongdat();
+            include "thongke/sophongdat.php";
+            break;
+
+        case 'sophongtrong':
+            $phongtrong = loadall_soluongphongdat();
+            include "thongke/sophongtrong.php";
+            break;
+
         case "listlp":
             $dsloaiphong = loadall_loaiphong();
             include "loaiphong/list.php";
+            break;
+
+        case "home":
+            $phongdat = load_sophongdat();
+            $phongtrong = load_sophongtrong();
+            $taikhoan = load_sotaikhoan();
+            $tien = load_tien();
+            $binhluan = load_binhluan();
+            $bill = load_bill_count();
+            include "home.php";
             break;
 
         case "addlp":
@@ -21,16 +55,25 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
                 $idte = $_POST['idte'];
                 $name = $_POST['name'];
                 $price = $_POST['price'];
-                $img = $_FILES['img']['name'];
-                $target_dir = "../img/type-of-room/";
-                $target_file = $target_dir . basename($_FILES["img"]["name"]);
-                if (move_uploaded_file($_FILES["img"]["tmp_name"], $target_file)) {
-                    // File moved successfully.
+
+                if (empty($idnl) || empty($idte) || empty($name) || empty($price)) {
+                    $thongbao = "Vui lòng nhập đầy đủ thông tin";
                 } else {
-                    echo "Error: File could not be moved.";
+                    $img = $_FILES['img']['name'];
+                    $target_dir = "../img/type-of-room/";
+                    $target_file = $target_dir . basename($_FILES["img"]["name"]);
+
+                    if (!empty($img)) {
+                        if (move_uploaded_file($_FILES["img"]["tmp_name"], $target_file)) {
+                            insert_loaiphong($name, $img, $price, $idnl, $idte);
+                            $thongbao = "Thêm thành công";
+                        } else {
+                            $thongbao = "Error: File could not be moved.";
+                        }
+                    } else {
+                        $thongbao = "Vui lòng chọn một hình ảnh";
+                    }
                 }
-                insert_loaiphong($name, $img, $price, $idnl, $idte);
-                $thongbao = "Thêm thành công";
             }
             $listnguoilon = loadall_nguoilon();
             $listtreem = loadall_treem();
@@ -83,20 +126,40 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
                 $idlp = $_POST['idlp'];
                 $name = $_POST['name'];
                 $mota = $_POST['mota'];
+                $soluong = $_POST['soluong'];
                 $img = $_FILES['img']['name'];
-                $target_dir = "../img/rooms/";
-                $target_file = $target_dir . basename($_FILES["img"]["name"]);
-                if (move_uploaded_file($_FILES["img"]["tmp_name"], $target_file)) {
-                    // File moved successfully.
+
+                // Kiểm tra rỗng
+                if (empty($name) || empty($mota) || empty($soluong) || empty($img)) {
+                    $thongbao = "Vui lòng điền đầy đủ thông tin.";
                 } else {
-                    echo "Error: File could not be moved.";
+                    // Kiểm tra số lượng phòng là số nguyên dương
+                    if (!is_numeric($soluong) || $soluong <= 0 || !filter_var($soluong, FILTER_VALIDATE_INT)) {
+                        $thongbao = "Số lượng phòng phải là một số nguyên dương.";
+                    } else {
+                        // Kiểm tra hình ảnh
+                        $target_dir = "../img/rooms/";
+                        $target_file = $target_dir . basename($_FILES["img"]["name"]);
+                        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+                        if (getimagesize($_FILES["img"]["tmp_name"]) === false || !in_array($imageFileType, array("jpg", "jpeg", "png", "gif"))) {
+                            $thongbao = "Vui lòng chọn một tệp hình ảnh hợp lệ (jpg, jpeg, png, gif).";
+                        } else {
+                            if (move_uploaded_file($_FILES["img"]["tmp_name"], $target_file)) {
+                                // File moved successfully.
+                                insert_phong($name, $soluong, $img, $idlp, $mota);
+                                $thongbao = "Thêm thành công";
+                            } else {
+                                $thongbao = "Error: File could not be moved.";
+                            }
+                        }
+                    }
                 }
-                insert_phong($name, $img, $idlp, $mota);
-                $thongbao = "Thêm thành công";
             }
             $dsloaiphong = loadall_loaiphong();
             include "phong/add.php";
             break;
+
 
         case 'listp':
             if (isset($_POST['listok']) && ($_POST['listok'])) {
@@ -131,15 +194,15 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
                 $idlp = $_POST['idlp'];
                 $name = $_POST['name'];
                 $mota = $_POST['mota'];
+                $soluong = $_POST['soluong'];
                 $img = $_FILES['img']['name'];
                 $target_dir = "../img/rooms/";
                 $target_file = $target_dir . basename($_FILES["img"]["name"]);
                 if (move_uploaded_file($_FILES["img"]["tmp_name"], $target_file)) {
                     // File moved successfully.
                 } else {
-                    echo "Error: File could not be moved.";
                 }
-                update_phong($id, $name, $img, $idlp, $mota);
+                update_phong($id, $name, $soluong, $img, $idlp, $mota);
                 $thongbao = "Thêm thành công";
             }
             $listphong = loadall_phong(0);
@@ -267,7 +330,7 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
             include "giaca/list.php";
             break;
 
-        case "xoagc";
+        case "xoagc":
             if (isset($_GET['id']) && ($_GET['id'] > 0)) {
                 delete_giaca($_GET['id']);
             }
@@ -275,14 +338,14 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
             include "giaca/list.php";
             break;
 
-        case "suagc";
+        case "suagc":
             if (isset($_GET['id']) && ($_GET['id'] > 0)) {
                 $gc = loadone_giaca($_GET['id']);
             }
             include "giaca/update.php";
             break;
 
-        case "updategc";
+        case "updategc":
             if (isset($_POST['capnhat']) && ($_POST['capnhat'])) {
                 $id = $_POST['id'];
                 $name = $_POST['name'];
@@ -307,12 +370,62 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
             include "taikhoan/list.php";
             break;
 
-        case "del-account";
+        case "del-account":
             if (isset($_GET['id']) && ($_GET['id'] > 0)) {
                 delete_taikhoan($_GET['id']);
             }
             $listAccount = loadall_taikhoan();
             include "taikhoan/list.php";
+            break;
+
+        case "list-comment":
+            $listComment = loadall_binhluan_taikhoan(0);
+            include "binhluan/list.php";
+            break;
+
+        case "del-comment":
+            if (isset($_GET['id']) && ($_GET['id'] > 0)) {
+                delete_binhluan($_GET['id']);
+            }
+            $listComment = loadall_binhluan_taikhoan(0);
+            include "binhluan/list.php";
+            break;
+
+        case "list-bill":
+            $listBill = loadall_bill_admin();
+            include "bill/list.php";
+            break;
+
+        case "del-bill":
+            if (isset($_GET['id']) && ($_GET['id'] > 0)) {
+                delete_bill($_GET['id']);
+            }
+            $listBill = loadall_bill_admin();
+            include "bill/list.php";
+            break;
+
+            // case 'suabill':
+            //     if (isset($_GET['id']) && $_GET['id'] > 0) {
+            //         $book = loadone_book($_GET['id']);
+            //     }
+            //     include 'bill/update.php';
+            //     break;
+
+        case 'update-bill':
+            if (isset($_POST['capnhat']) && ($_POST['capnhat'])) {
+                $id = $_POST['id'];
+                $tinhtrang = $_POST['tinhtrang'];
+                update_bill($id, $tinhtrang);
+            }
+            $listBill = loadall_bill_admin($kyw = "", $iduser = 0);
+            include "bill/list.php";
+            break;
+
+        case 'thongke':
+            $dsthongke = load_thongke_sophong();
+            $dsthongke2 = load_thongke_all();
+            $dsthongke3 = load_tien_thongke();
+            include "thongke/bieudo.php";
             break;
     }
 } else {

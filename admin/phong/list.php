@@ -30,6 +30,7 @@
                 <th style="text-align: center;">Tên phòng</th>
                 <th style="text-align: center;">Giá</th>
                 <th style="text-align: center;">Ảnh</th>
+                <th style="text-align: center;">Số lượng</th>
                 <th style="text-align: center;">Mô tả</th>
                 <th style="text-align: center;">Action</th>
             </tr>
@@ -54,6 +55,7 @@
                     <td><?= $nameroom ?></td>
                     <td><?= number_format($price, 0, ',', '.') ?>Đ</td>
                     <td><?= $hinh ?></td>
+                    <td><?= $soluong ?> </td>
                     <td><?= $mota ?> </td>
                     <td>
                         <a href="<?= $suap ?>"><input style="color: #fff; background-color: #0d6efd" type="button" value="Sửa" class="btn btn-primary"></a>

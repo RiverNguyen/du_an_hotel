@@ -2,7 +2,7 @@
  <div class="banner-header section-padding valign bg-img bg-fixed" data-overlay-dark="4" data-background="img/slider/3.jpg">
      <div class="container">
          <div class="row">
-             <div class="col-md-12 text-right caption mt-90">
+             <div class="col-md-12 text-left caption mt-90">
                  <span>
                      <i class="star-rating"></i>
                      <i class="star-rating"></i>
@@ -11,9 +11,11 @@
                      <i class="star-rating"></i>
                  </span>
                  <h5>The BGV Luxury Hotel</h5>
-
-                 <h1><?= $namelp ?></h1>
-
+                 <?php if (isset($namelp)) : ?>
+                     <h1><?= $namelp ?></h1>
+                 <?php else : ?>
+                     <h1>Phòng & Suites</h1>
+                 <?php endif; ?>
              </div>
          </div>
      </div>
@@ -93,6 +95,7 @@
 
                                  <h6><?= number_format($price, 0, ',', '.') ?>VND / Đêm</h6>
                                  <h4><?= $name ?></h4>
+                                 <p>Số lượng phòng: <?= ($soluong - $dadat) ?></p>
                                  <p><?= $mota ?>.</p>
                                  <div class="row room-facilities mb-30">
                                      <div class="col-md-6">

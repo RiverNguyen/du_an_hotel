@@ -2,8 +2,6 @@
 extract($room);
 $img = $img_p . $img;
 $modalId = "exampleModal" . $id;
-
-
 ?>
 <!-- Room Page Slider -->
 <header class="header slider">
@@ -34,6 +32,13 @@ $modalId = "exampleModal" . $id;
                 </span>
                 <div class="section-subtitle"><?= $namelp ?></div>
                 <div class="section-title"><?= $nameroom ?></div>
+                <div class="section-title">Số phòng còn lại:
+                    <?php if ($soluong > $dadat) : ?>
+                        <?= $soluong - $dadat ?>
+                    <?php else : ?>
+                        <?= 0 ?>
+                    <?php endif; ?>
+                </div>
             </div>
             <div class="col-md-8">
                 <p class="mb-30"><?= $nameroom ?> là sự kết hợp tuyệt vời giữa không gian thoải mái và tiện nghi tại khách sạn chúng tôi. Được thiết kế đặc biệt để mang lại trải nghiệm đáng nhớ cho khách hàng, <?= $name ?> cung cấp một không gian lý tưởng để thư giãn và nghỉ ngơi. Với diện tích rộng rãi, phòng này bao gồm một phòng ngủ riêng biệt và một phòng khách tiện nghi, cung cấp không gian riêng tư và thoải mái cho quý khách.</p>
@@ -78,11 +83,22 @@ $modalId = "exampleModal" . $id;
                     </div>
 
                     <!-- Button trigger modal -->
-                    <div class="col-md-12">
-                        <button class="btn-booking" type="button" data-bs-toggle="modal" data-bs-target="#<?= $modalId ?>">
-                            Đặt phòng ngay
-                        </button>
-                    </div>
+                    <?php if (isset($_SESSION['user']['id'])) : ?>
+                        <div class="col-md-12">
+                            <?php if ($soluong == $dadat) : ?>
+                                <h2 class="text-danger">Đã hết phòng!</h2>
+                            <?php else : ?>
+                                <button class="btn-booking" type="button" data-bs-toggle="modal" data-bs-target="#<?= $modalId ?>">
+                                    Đặt phòng ngay
+                                </button>
+                            <?php endif; ?>
+
+                        </div>
+                    <?php else : ?>
+                        <div class="col-md-12">
+                            <a href="index.php?act=sign-in" class="btn-booking">Đăng nhập để đặt phòng</a>
+                        </div>
+                    <?php endif; ?>
 
 
                     <!-- Modal -->
@@ -94,22 +110,24 @@ $modalId = "exampleModal" . $id;
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form action="index.php?act=booking-room" method="post">
+                                <form onsubmit="return validateForm()" action="index.php?act=booking-room" method="post">
                                         <div class="sm:col-span-full">
                                             <input type="hidden" name="id" value="<?= $id ?>">
                                             <input type="hidden" name="name" value="<?= $nameroom ?>">
                                             <input type="hidden" name="img" value="<?= $img ?>">
                                             <input type="hidden" name="price" value="<?= $price ?>">
-                                            <label for="" class="block text-sm font-medium leading-6 text-gray-900">Ngày nhận phòng:</label>
-                                            <input style="padding-left: 12px;" type="date" name="checkin" id="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 me-5">
-                                            <label for="" class="block text-sm font-medium leading-6 text-gray-900">Ngày trả phòng:</label>
-                                            <input style="padding-left: 12px;" type="date" name="checkout" id="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                                            <label for="" class="block text-sm font-medium leading-6 text-gray-900">Số lượng phòng:</label>
+                                            <input style="padding-left: 12px;" type="number" max="<?= $soluong - $dadat ?>" name="soluong" id="soluong" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                         </div>
-
                                 </div>
                                 <div class="modal-footer">
                                     <input type="button" style="background-color: #ccc;" value="Quay lại" class="btn-booking me-3" data-bs-dismiss="modal"></input>
                                     <input type="submit" class="btn-booking" name="book" value="Đồng ý đặt"></input>
+                                    <?php
+                                    if (isset($thongbao)) {
+                                        echo $thongbao;
+                                    }
+                                    ?>
                                 </div>
                                 </form>
                             </div>
@@ -194,7 +212,7 @@ $modalId = "exampleModal" . $id;
                             <div class="position-re o-hidden"> <img src="<?= $hinh ?>" alt=""> </div> <span class="category"><a href="<?= $linkroom ?>">Đặt</a></span>
                             <div class="con">
                                 <h6><a href="<?= $linkroom ?>"><?= number_format($price, 0, ',', '.') ?>VND / Đêm</a></h6>
-                                <h5><a href="<?= $linkroom ?>"><?= $name ?></a> </h5>
+                                <h5><a href="<?= $linkroom ?>"><?= $nameroom ?></a> </h5>
                                 <div class="line"></div>
                                 <div class="row facilities">
                                     <div class="col col-md-7">
@@ -400,3 +418,16 @@ $modalId = "exampleModal" . $id;
         </div>
     </div>
 </section>
+
+<script>
+    function validateForm() {
+        var soluongInput = document.getElementById('soluong');
+        var soluongValue = parseInt(soluongInput.value);
+
+        if (soluongValue < 1) {
+            alert("Số lượng phòng phải lớn hơn 0");
+            return false;
+        }
+        return true;
+    }
+</script>

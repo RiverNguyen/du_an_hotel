@@ -21,7 +21,7 @@ function loadall_binhluan($idroom)
 function loadall_binhluan_taikhoan($idroom)
 {
 
-    $sql = "select * from binhluan bl join taikhoan tk on bl.iduser = tk.id where 1";
+    $sql = "select bl.id, bl.*, tk.name from binhluan bl join taikhoan tk on bl.iduser = tk.id where 1";
     if ($idroom > 0) {
         $sql .= " and idroom = '" . $idroom . "'";
     } else {

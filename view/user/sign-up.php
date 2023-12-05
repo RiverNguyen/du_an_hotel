@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="col-md-5 mb-30 offset-md-1">
-                <h3>Đăng ký tài khoản</h3>
+                <h3 class="mb-3">Đăng ký tài khoản</h3>
                 <form method="post" action="index.php?act=sign-up">
                     <!-- form elements -->
                     <div class="row">
@@ -76,7 +76,7 @@
                 </form>
                 <br>
                 <div class="text">
-                    <p>Bạn đã có toàn khoản ? <a href="index.php?act=sign-in" style="color: #AA8453;" class="bold">Đăng nhập tại đây</a></p>
+                    <p>Bạn đã có toàn khoản ? <a href="index.php?act=sign-in" style="color: #AA8453;" class="bold">Đăng nhập tại đây</a></p><br>
                     <p style="margin-top: -12px;">Bạn quên mật khẩu ? <a href="index.php?act=forgot-pass" style="color: #AA8453;" class="bold">Tìm lại mật khẩu tại đây</a></p>
                 </div>
                 <br>
