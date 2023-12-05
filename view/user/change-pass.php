@@ -18,7 +18,7 @@
                 <p>Chào mừng bạn đến với khách sạn 5 sao sang trọng và đẳng cấp của chúng tôi! Với vị trí tuyệt vời
                     tại trung tâm thành phố, chúng tôi tự hào mang đến trải nghiệm lưu trú tuyệt vời cho khách hàng
                     của mình. Với thiết kế hiện đại và tiện nghi cao cấp, khách sạn chúng tôi không chỉ là nơi bạn
-                    nghỉ ngơi mà còn là điểm đến của sự sang trọng.</p>
+                    nghỉ ngơi mà còn là điểm đến của sự sang trọng.</p><br>
                 <div class="reservations mb-30">
                     <div class="icon"><span class="flaticon-call"></span></div>
                     <div class="text">
@@ -40,7 +40,7 @@
                 </div>
             </div>
             <div class="col-md-5 mb-30 offset-md-1">
-                <h3>Đổi mật khẩu:</h3>
+                <h3 class="mb-3">Đổi mật khẩu:</h3>
                 <form method="post" action="index.php?act=change-pass">
                     <!-- form elements -->
                     <div class="row">

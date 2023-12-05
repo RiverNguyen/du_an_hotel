@@ -80,7 +80,7 @@
 <div style="left: 10%;" class="booking-wrapper">
     <div class="container">
         <div class="booking-inner clearfix">
-            <form method="post" action="index.php?act=search" class="form1 clearfix">
+            <form onsubmit="return validateForm()" method="post" action="index.php?act=search" class="form1 clearfix">
                 <div class="col3 c1">
                     <div class="input1_wrapper">
                         <label>Nhận phòng</label>
@@ -153,7 +153,7 @@
                 <img src="img/rooms/8.jpg" alt="" class="mt-90 mb-30">
             </div>
             <div class="col col-md-3 animate-box" data-animate-effect="fadeInUp">
-                <img src="img/rooms/2.jpg" alt="">
+                <img src="img/type-of-room/2.jpg" alt="">
             </div>
         </div>
     </div>
@@ -729,3 +729,35 @@
         </div>
     </div>
 </section>
+<script>
+    $(document).ready(function() {
+        $('.datepicker').datepicker({
+            dateFormat: 'yy-mm-dd', // Định dạng ngày
+            minDate: 0, // Ngày nhỏ nhất là ngày hiện tại
+            onSelect: function(selectedDate) {
+                var checkin = $(this).hasClass('checkin');
+                var checkout = $(this).hasClass('checkout');
+
+                if (checkin) {
+                    // Nếu là ngày nhận phòng, set ngày trả phòng tối thiểu là ngày nhận phòng đã chọn
+                    $('.checkout').datepicker('option', 'minDate', selectedDate);
+                } else if (checkout) {
+                    // Nếu là ngày trả phòng, set ngày nhận phòng tối đa là ngày trả phòng đã chọn
+                    $('.checkin').datepicker('option', 'maxDate', selectedDate);
+                }
+            }
+        });
+    });
+
+    function validateForm() {
+        var checkinDate = new Date($('input[name="checkin"]').val());
+        var checkoutDate = new Date($('input[name="checkout"]').val());
+
+        if (checkinDate >= checkoutDate) {
+            alert("Ngày nhận phòng phải trước ngày trả phòng.");
+            return false;
+        }
+
+        return true;
+    }
+</script>

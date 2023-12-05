@@ -31,7 +31,7 @@ $listComment = loadall_binhluan_taikhoan($idroom);
                                         <?php foreach ($listComment as $comment) : ?>
                                             <?php extract($comment); ?>
 
-                                            <h3><?= $user ?><span> <?= $ngaybinhluan ?></span></h3>
+                                            <h3><?= $name ?><span> <?= $ngaybinhluan ?></span></h3>
                                             <p><?= $noidung ?></p>
                                         <?php endforeach; ?>
                                     </div>

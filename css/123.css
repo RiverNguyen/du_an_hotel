@@ -1,0 +1,18 @@
+.custom-select {
+    height: 30px;
+    border: none;
+    width: 120px;
+    background-color: transparent;
+}
+
+.option-0 {
+    color: red;
+}
+
+.option-1 {
+    color: orange;
+}
+
+.option-2 {
+    color: green;
+}

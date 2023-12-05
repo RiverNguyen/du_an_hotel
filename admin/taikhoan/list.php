@@ -62,9 +62,6 @@
     </table>
 </div>
 <div class="container my-5">
-    <div>
-        <a href="index.php?act=addti"><input class="input-lp" style="letter-spacing: 0px;" type="submit" value="Nhập thêm" class="btn btn-primary"></a>
-    </div>
 </div>
 </div>
 </div>

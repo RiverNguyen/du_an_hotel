@@ -14,6 +14,11 @@
     <link rel="stylesheet" href="css/plugins.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/home.css" />
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css" rel="stylesheet">
+
+    <!-- Tailwind JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/forms@0.3.3/dist/forms.min.js"></script>
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-LCJVJD2892"></script>
     <script>
@@ -26,6 +31,7 @@
 
         gtag('config', 'G-LCJVJD2892');
     </script>
+
 </head>
 
 <body>
@@ -98,6 +104,8 @@
                     ?>
                         <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-auto-close="outside" aria-expanded="false">Xin chào, <?= $name ?> <i class="ti-angle-down"></i></a>
                             <ul class="dropdown-menu">
+                                <li><a href="index.php?act=my-bill" class="dropdown-item"><span>Đơn đặt của tôi</span></a></li>
+                                <li><a href="index.php?act=booking-room" class="dropdown-item"><span>Danh sách phòng đặt</span></a></li>
                                 <li><a href="index.php?act=forgot-pass" class="dropdown-item"><span>Quên mật khẩu</span></a></li>
                                 <li><a href="index.php?act=edit-account" class="dropdown-item"><span>Cập nhật tài khoản</span></a></li>
                                 <?php if ($role == 1) : ?>

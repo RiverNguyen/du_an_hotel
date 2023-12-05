@@ -84,9 +84,11 @@
 <script src="js/jquery.magnific-popup.js"></script>
 <script src="js/YouTubePopUp.js"></script>
 <script src="js/select2.js"></script>
-<script src="js/datepicker.js"></script>
+<script src="js/date.js"></script>
 <script src="js/smooth-scroll.min.js"></script>
 <script src="js/custom.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
 
 </body>
 

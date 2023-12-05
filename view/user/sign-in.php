@@ -19,6 +19,7 @@
                     tại trung tâm thành phố, chúng tôi tự hào mang đến trải nghiệm lưu trú tuyệt vời cho khách hàng
                     của mình. Với thiết kế hiện đại và tiện nghi cao cấp, khách sạn chúng tôi không chỉ là nơi bạn
                     nghỉ ngơi mà còn là điểm đến của sự sang trọng.</p>
+                    <br>
                 <div class="reservations mb-30">
                     <div class="icon"><span class="flaticon-call"></span></div>
                     <div class="text">
@@ -40,7 +41,7 @@
                 </div>
             </div>
             <div class="col-md-5 mb-30 offset-md-1">
-                <h3>Đăng nhập tài khoản</h3>
+                <h3 class="mb-2">Đăng nhập tài khoản</h3>
                 <form method="post" action="index.php?act=sign-in">
                     <!-- form elements -->
                     <div class="row">
@@ -60,7 +61,7 @@
                 </form>
                 <br>
                 <div class="text">
-                    <p>Bạn chưa có toàn khoản ? <a href="index.php?act=sign-up" style="color: #AA8453;" class="bold">Đăng kí tại đây</a></p>
+                    <p>Bạn chưa có toàn khoản ? <a href="index.php?act=sign-up" style="color: #AA8453;" class="bold">Đăng kí tại đây</a></p><br>
                     <p style="margin-top: -12px;">Bạn quên mật khẩu ? <a href="index.php?act=forgot-pass" style="color: #AA8453;" class="bold">Tìm lại mật khẩu tại đây</a></p>
                 </div>
                 <br>
