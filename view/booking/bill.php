@@ -9,7 +9,7 @@
 </div>
 
 <div class="container my-5">
-    <form method="post" action="index.php?act=billconfirm">
+    <form onsubmit="return validateForm()" method="post" action="index.php?act=billconfirm">
         <?php
         $tong = 0;
         $soluong = 0;
@@ -25,16 +25,29 @@
             $tel = "";
         }
 
-        if (isset($_SESSION['my-booking'])) {
-            $so = $_SESSION['my-booking'][0][4];
-            $checkin = $_SESSION['my-booking'][0][5];
-            $checkout = $_SESSION['my-booking'][0][6];
+        if (isset($_SESSION['my-booking']) && is_array($_SESSION['my-booking']) && count($_SESSION['my-booking']) > 0) {
+            $checkin = $_SESSION['my-booking'][0][4];
+            $checkout = $_SESSION['my-booking'][0][5];
             $tongtien = $_SESSION['my-booking'][0][8];
             $idp = $_SESSION['my-booking'][0][0];
             foreach ($_SESSION['my-booking'] as $book) {
-                $tong += $book[8];
-                $soluong += $book[4];
+                $id = $book[0];
+                $ci = $book[4];
+                $co = $book[5];
+                if (isset($book[8])) {
+                    $tong += (floor((strtotime($co) - strtotime($ci)) / (60 * 60 * 24)) * $book[3] * $_SESSION['soluong'][$id]);
+                }
+                if (isset($_SESSION['soluong'][$id])) {
+                    $soluong += $_SESSION['soluong'][$id];
+                }
             }
+        } else {
+            $thongbao = "Mời bạn đặt phòng trước";
+            $so = "";
+            $checkin = "";
+            $checkout = "";
+            $tongtien = "";
+            $idp = "";
         }
         ?>
         <div class="space-y-12">
@@ -69,18 +82,31 @@
                     </div>
                 </div>
                 <br>
-                <h1 class="text-danger" style="font-size: 24px;">Tổng số tiền: <?= number_format($tong, 0, ',', '.') ?> Đ</h1>
+
+                <?php if ($tong > 0 && $soluong > 0) : ?>
+                    <h1 class="text-danger" style="font-size: 24px;">Tổng số tiền: <?= number_format($tong, 0, ',', '.') ?> Đ</h1>
+                    <h1 class="text-danger" style="font-size: 24px;">Tổng số phòng: <?= number_format($soluong, 0, ',', '.') ?></h1>
+                <?php endif; ?>
                 <br>
                 <br>
-                <input type="submit" name="confirm" value="Thanh toán" style="background-color: #aa8453; text-transform: none; font-family: inherit; letter-spacing: 0; margin-top: -100px;" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"></input>
-                <input type="submit" name="redirect" value="VNPay" style="background-color: #aa8453; text-transform: none; font-family: inherit; letter-spacing: 0; margin-top: -100px;" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"></input>
+                <div class="d-flex justify-content-between">
+                    <div style="display: inline-block; text-align: left;">
+                        <a style="" href="index.php?act=list-room"><input type="button" name="" value="Tiếp tục đặt phòng" style="background-color: #aa8453; text-transform: none; font-family: inherit; letter-spacing: 0; margin-top: -100px;" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"></input></a>
+                        <input type="submit" name="update" value="Cập nhật" style="background-color: #aa8453; text-transform: none; font-family: inherit; letter-spacing: 0; margin-top: -100px;" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"></input></a>
+                    </div>
+                    <div style="display: inline-block; text-align: right;">
+                        <input type="submit" name="confirm" value="Thanh toán" style="background-color: #aa8453; text-transform: none; font-family: inherit; letter-spacing: 0; margin-top: -100px;" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                        <input type="submit" name="redirect" value="VNPay" style="background-color: #aa8453; text-transform: none; font-family: inherit; letter-spacing: 0; margin-top: -100px;" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    </div>
+                </div>
+                <h1><?php (isset($thongbao)) ? $thongbao : "" ?></h1>
             </div>
         </div>
         <section class="section-padding">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        <?php view_booking(0); ?>
+                        <?php view_booking(1); ?>
                     </div>
                 </div>
             </div>
@@ -89,3 +115,19 @@
     <br>
 </div>
 </div>
+
+<script>
+    function validateForm() {
+        // Check if there are booked rooms
+        var hasBookedRooms = <?php echo isset($_SESSION['my-booking']) && is_array($_SESSION['my-booking']) && count($_SESSION['my-booking']) > 0 ? 'true' : 'false'; ?>;
+
+        if (!hasBookedRooms) {
+            alert('Vui lòng đặt phòng trước khi thanh toán.');
+            return false;
+        }
+
+        // Additional validation logic if needed
+
+        return true;
+    }
+</script>

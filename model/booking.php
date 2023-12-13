@@ -7,13 +7,12 @@ function view_booking($del)
 
     foreach ($_SESSION['my-booking'] as $room) {
         $hinh = $room[2];
-        $money = $room[3] * $room[4] * $room[7];
+        $money = $room[3] * $_SESSION['soluong'][$room[0]] * $room[8];
         $linkroom = 'index.php?act=room-detail&id=' . $room[0];
         $delroom = '';
         $accept = '';
         $total += $money;
-        $tongsl += $room[4];
-
+        $tongsl += $_SESSION['soluong'][$room[0]];
         if ($del == 1) {
             $delroom = '<a href="index.php?act=del-room&idbook=' . $i . '" class="link-btn"><input type="button" value="Xoá"></a>';
             $accept = '<a style="" href="index.php?act=bill"><input style="font-weight: 400;
@@ -46,8 +45,9 @@ function view_booking($del)
             <div class="caption">
                 <h3><?= number_format($room[3], 0, ',', '.') ?>Đ <span>/ ĐÊM</span></h3>
                 <h4><a href="<?= $linkroom ?>"><?= $room[1] ?></a></h4>
-                <p>Ngày nhận phòng: <?= $room[5] ?> &emsp; &emsp; Ngày trả phòng: <?= $room[6] ?></p>
-                <p>Số lượng phòng đặt: <?= $room[4] ?></p>
+                <p>Ngày nhận phòng: <?= date("d/m/Y", strtotime($room[4])) ?> &emsp; &emsp; Ngày trả phòng: <?= date("d/m/Y", strtotime($room[5])) ?></p>
+                <p>Số lượng phòng đặt: <input type="text" style="width: 20px; height: 10px; display: inline-block; padding-left: 6px; border: .5px solid #ccc;" name="soluong[<?= $room[0] ?>]" value="<?= $_SESSION['soluong'][$room[0]] ?>"> &emsp; &emsp; &emsp; &emsp; Thời gian đặt: <?= $room[6] ?></p>
+                <br>
                 <div class="row room-facilities">
                     <div class="col-md-4">
                         <ul>
@@ -70,25 +70,13 @@ function view_booking($del)
                 </div>
                 <hr class="border-2">
                 <div class="info-wrapper">
-                    <div class="more"><?= $delroom ?></div>
+                    <div class="more mt-3"><?= $delroom ?></div>
                 </div>
             </div>
         </div>
         </div>
     <?php
         $i += 1;
-    }
-    if ($total > 0 && $tongsl > 0) {
-        echo '<h1 style="font-size: 30px">Tổng tiền: ' . number_format($total, 0, ',', '.') . 'Đ</h1>';
-        echo '<h3 style="font-size: 30px">Tổng số lượng phòng: ' . $tongsl . '</h3>';
-    } else {
-        echo '<h3>Không có phòng nào được đặt</h3>';
-    }
-    if (isset($accept)) {
-        echo '<div class="butn-dark my-3">' . $accept . '</div> <br>';
-    }
-    if (isset($tieptuc)) {
-        echo '<div class="butn-dark">' . $tieptuc . '</div>';
     }
 }
 
@@ -139,9 +127,9 @@ function insert_bill($iduser, $name, $address, $email, $tel, $daybook)
     $sql = "INSERT INTO bill(iduser, bill_name, bill_address, bill_email, bill_tel, daybook) VALUES ('$iduser', '$name', '$address', '$email', '$tel', '$daybook')";
     return pdo_execute_return_lastInsertID($sql);
 }
-function insert_booking($iduser, $idp, $img, $name, $price, $soluong, $checkin, $checkout, $thanhtien, $pttt, $idbill)
+function insert_booking($iduser, $idp, $img, $name, $price, $soluong, $checkin, $checkout, $time, $thanhtien, $pttt, $idbill)
 {
-    $sql = "INSERT INTO book(iduser, idp, img, name, price, soluong, checkin, checkout, thanhtien, pttt, idbill) VALUES ('$iduser', '$idp', '$img', '$name', '$price', '$soluong', '$checkin', '$checkout', '$thanhtien','$pttt','$idbill')";
+    $sql = "INSERT INTO book(iduser, idp, img, name, price, soluong, checkin, checkout, time, thanhtien, pttt, idbill) VALUES ('$iduser', '$idp', '$img', '$name', '$price', '$soluong', '$checkin', '$checkout', '$time', '$thanhtien', '$pttt', '$idbill')";
     return pdo_execute($sql);
 }
 
@@ -149,7 +137,10 @@ function tongcong()
 {
     $total = 0;
     foreach ($_SESSION['my-booking'] as $book) {
-        $ttien = $book[3] * $book[7] * $book[4];
+        $id = $book[0];
+        $ci = $book[4];
+        $co = $book[5];
+        $ttien = (floor((strtotime($co) - strtotime($ci)) / (60 * 60 * 24)) * $book[3] * $_SESSION['soluong'][$id]);
         $total += $ttien;
     }
     return $total;
@@ -164,7 +155,7 @@ function loadone_bill($daybook)
 
 function loadone_book($id)
 {
-    $sql = "select * from book where id=" . $id;
+    $sql = "select trangthai from book where id=" . $id;
     $book = pdo_query_one($sql);
     return $book;
 }
@@ -249,8 +240,6 @@ function update_bill($id, $tinhtrang)
     pdo_execute($sql);
 }
 
-
-
 function get_ttdh($n)
 {
     switch ($n) {
@@ -262,6 +251,27 @@ function get_ttdh($n)
             break;
         case '2':
             $tt = "Đặt thành công";
+            break;
+        case '3':
+            $tt = "Đã trả phòng";
+            break;
+        default:
+            $tt = "Đơn đặt mới";
+            break;
+    }
+    return $tt;
+}
+function get_ttdh1($n)
+{
+    switch ($n) {
+        case '0':
+            $tt = '<span style="color: red;">Đặt phòng mới</span>';
+            break;
+        case '1':
+            $tt = '<span style="color: orange;">Đang xử lí</span>';
+            break;
+        case '2':
+            $tt = '<span style="color: green;">Đặt thành công</span>';
             break;
         default:
             $tt = "Đơn đặt mới";
@@ -275,5 +285,19 @@ function vn_pay($vnp_Amount, $vnp_BankCode, $vnp_BankTranNo, $vnp_CardType, $vnp
     $sql = "insert into vnpay(vnp_Amount, vnp_BankCode, vnp_BankTranNo, vnp_CardType, vnp_OrderInfo, vnp_PayDate, vnp_ResponseCode, vnp_TmnCode, vnp_TransactionNo, vnp_TransactionStatus, vnp_TxnRef, vnp_SecureHash) values ('$vnp_Amount', '$vnp_BankCode', '$vnp_BankTranNo', '$vnp_CardType', '$vnp_OrderInfo', '$vnp_PayDate', '$vnp_ResponseCode', '$vnp_TmnCode', '$vnp_TransactionNo', '$vnp_TransactionStatus', '$vnp_TxnRef', '$vnp_SecureHash')";
     pdo_execute($sql);
 }
+
+function update_soluong_down($idp, $soluong)
+{
+    $sql = "update phong set dadat = dadat - " . $soluong . " where id = " . $idp;
+    pdo_execute($sql);
+}
+
+function update_soluong_up($idp, $soluong)
+{
+    $sql = "update phong set dadat = dadat + " . $soluong . " where id = " . $idp;
+    pdo_execute($sql);
+}
+
+
 
 ?>

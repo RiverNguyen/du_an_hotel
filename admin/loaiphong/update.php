@@ -1,5 +1,5 @@
 <?php
-if (is_array($lp)) {
+if (isset($lp) && is_array($lp)) {
   extract($lp);
 }
 
@@ -21,12 +21,13 @@ if (is_file($imgpath)) {
 </div>
 
 <div class="container my-5">
-  <form action="index.php?act=updatelp" method="POST" enctype="multipart/form-data">
+  <form action="index.php?act=updatelp" method="POST" enctype="multipart/form-data" onsubmit="return validateForm()">
+    <input type="hidden" name="current_img" value="<?= $img ?>">
     <div class="space-y-12">
       <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
         <div class="sm:col-span-full">
           <label for="" class="block text-sm font-medium leading-6 text-gray-900">Tên loại phòng:</label>
-          <input value="<?= $name ?>" style="padding-left: 12px;" type="text" name="name" id="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Nhập tên loại phòng...">
+          <input value="<?= $name ?>" style="padding-left: 12px;" type="text" name="name" id="name" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" placeholder="Nhập tên loại phòng...">
         </div>
       </div>
     </div>
@@ -53,13 +54,13 @@ if (is_file($imgpath)) {
         <div class="sm:col-span-full">
           <label for="" class="block text-sm font-medium leading-6 text-gray-900">Giá:</label>
           <div class="mt-2">
-            <input style="padding-left: 12px;" value="<?= $price ?>" type="text" name="price" id="" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <input style="padding-left: 12px;" value="<?= $price ?>" type="text" name="price" id="price" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           </div>
         </div>
         <div class="sm:col-span-3">
           <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Người lớn:</label>
           <div class="mt-2">
-            <select style="padding-left: 12px; padding-right: 12px; height: 36px;" name="idnl" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <select style="padding-left: 12px; padding-right: 12px; height: 36px;" name="idnl" id="idnl" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
               <?php foreach ($listnguoilon as $nguoilon) : ?>
                 <?php if ($idnl == $nguoilon['id']) $s = "selected";
                 else $s = ""; ?>
@@ -71,7 +72,7 @@ if (is_file($imgpath)) {
         <div class="sm:col-span-3">
           <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Trẻ em:</label>
           <div class="mt-2">
-            <select style="padding-left: 12px; padding-right: 12px; height: 36px;" name="idte" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+            <select style="padding-left: 12px; padding-right: 12px; height: 36px;" name="idte" id="idte" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
               <?php foreach ($listtreem as $treem) : ?>
                 <?php if ($idte == $treem['id']) $s = "selected";
                 else $s = ""; ?>
@@ -84,13 +85,32 @@ if (is_file($imgpath)) {
     </div>
 
     <div class="mt-6 flex items-center justify-end gap-x-6">
+      <div class="text-danger bold">
+        <?php
+        if (isset($thongbao) && ($thongbao != "")) {
+          echo $thongbao;
+        }
+        ?>
+      </div>
       <input type="hidden" name="id" value="<?php if (isset($id) && ($id > 0)) echo $id ?>">
       <input type="submit" value="Lưu" style="background-color: #aa8453; text-transform: none; font-family: inherit; letter-spacing: 0;" name="capnhat" class="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-sky-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"></input>
     </div>
-    <?php
-    if (isset($thongbao) && ($thongbao != "")) {
-      echo $thongbao;
-    }
-    ?>
+
   </form>
 </div>
+
+<script>
+  function validateForm() {
+    var name = document.getElementById('name').value;
+    var price = document.getElementById('price').value;
+    var idnl = document.getElementById('idnl').value;
+    var idte = document.getElementById('idte').value;
+
+    if (name.trim() === '' || price.trim() === '' || idnl.trim() === '' || idte.trim() === '') {
+      alert('Vui lòng nhập đầy đủ thông tin trước khi lưu.');
+      return false;
+    }
+
+    return true;
+  }
+</script>

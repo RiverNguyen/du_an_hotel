@@ -66,3 +66,9 @@ function load_tien_thongke()
     GROUP BY name";
     return pdo_query($sql);
 }
+
+function load_binhluan_thongke()
+{
+    $sql = "SELECT phong.name, noidung, COUNT(idroom) 'soluong' FROM `binhluan` INNER JOIN phong on phong.id = binhluan.idroom GROUP BY phong.name";
+    return pdo_query($sql);
+}

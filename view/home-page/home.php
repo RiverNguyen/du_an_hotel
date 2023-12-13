@@ -656,13 +656,13 @@
                             <h4>Đặt Phòng Khách Sạn</h4>
                         </div>
                         <div class="booking-inner clearfix">
-                            <form method="post" action="index.php?act=search" class="form1 clearfix">
+                            <form onsubmit="return validateSearchForm()" method="post" action="index.php?act=search" class="form1 clearfix">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="input1_wrapper">
                                             <label>Nhận phòng</label>
                                             <div class="input1_inner">
-                                                <input type="text" name="checkin" class="form-control input datepicker" placeholder="Nhận phòng">
+                                                <input type="text" name="checkin" id="checkin" class="form-control input datepicker" placeholder="Nhận phòng">
                                             </div>
                                         </div>
                                     </div>
@@ -670,7 +670,7 @@
                                         <div class="input1_wrapper">
                                             <label>Trả phòng</label>
                                             <div class="input1_inner">
-                                                <input type="text" name="checkout" class="form-control input datepicker" placeholder="Trả phòng">
+                                                <input type="text" name="checkout" id="checkout" class="form-control input datepicker" placeholder="Trả phòng">
                                             </div>
                                         </div>
                                     </div>
@@ -689,7 +689,7 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12">
-                                        <button type="submit" class="btn-form1-submit mt-15">Tìm ngay</button>
+                                        <input type="submit" class="btn-form1-submit mt-15" name="search" value="Tìm ngay"></input>
                                     </div>
                                 </div>
                             </form>
@@ -758,6 +758,26 @@
             return false;
         }
 
+        return true;
+    }
+
+    function validateSearchForm() {
+        var checkinDate = new Date(document.getElementById('checkin').value);
+        var checkoutDate = new Date(document.getElementById('checkout').value);
+
+        // Kiểm tra xem ngày nhận phòng và ngày trả phòng có giá trị không
+        if (!checkinDate || !checkoutDate) {
+            alert('Vui lòng nhập cả ngày nhận phòng và ngày trả phòng');
+            return false;
+        }
+
+        // Kiểm tra xem ngày nhận phòng có trước ngày trả phòng không
+        if (checkoutDate <= checkinDate) {
+            alert('Ngày trả phòng phải sau ngày nhận phòng');
+            return false;
+        }
+
+        // Nếu thông tin nhập là hợp lệ, biểu mẫu sẽ được gửi đi
         return true;
     }
 </script>

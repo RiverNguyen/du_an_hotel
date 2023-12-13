@@ -15,9 +15,9 @@
                             cho khách hàng một trải nghiệm lưu trú tuyệt vời và thoải mái nhất.</p>
 
                         <div class="footer-language"> <i class="lni ti-world"></i>
-                            <select onchange="location = this.value;">
-                                <option value="http://duruthemes.com/">Tiếng Việt</option>
-                                <option value="http://duruthemes.com/">English</option>
+                            <select style="padding-left: 12px;" onchange="location = this.value;">
+                                <option>Tiếng Việt</option>
+                                <option>English</option>
                             </select>
                         </div>
                     </div>
@@ -87,6 +87,7 @@
 <script src="js/date.js"></script>
 <script src="js/smooth-scroll.min.js"></script>
 <script src="js/custom.js"></script>
+<script src="js/clockpicker.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
 

@@ -5,9 +5,22 @@ function insert_phong($name, $soluong, $img, $idlp, $mota)
     pdo_execute($sql);
 }
 
+function check_phong($name)
+{
+    $sql = "select * from phong where name = '" . $name . "'";
+    $phong = pdo_query_one($sql);
+    return $phong;
+}
+
 function delete_phong($id)
 {
     $sql = "delete from phong where id = " . $id;
+    pdo_query($sql);
+}
+
+function delete_phong_with_comment($id)
+{
+    $sql = "delete from binhluan where idroom = " . $id;
     pdo_query($sql);
 }
 
@@ -135,12 +148,12 @@ function search_empty_room($checkin = "", $checkout = "", $idlp = 0)
     }
 
     if ($checkin != "" && $checkout != "") {
-        $sql .= " and p.soluong <> 0 AND p.id NOT IN 
+        $sql .= " and p.soluong <> 0 or p.id NOT IN 
              (SELECT idp FROM book 
              WHERE ('$checkin' BETWEEN checkin AND checkout)
              OR ('$checkout' BETWEEN checkin and checkout)
              OR (checkin BETWEEN '$checkin' AND '$checkout')
-             OR (checkout BETWEEN '$checkin' AND '$checkout'))";
+             OR (checkout BETWEEN '$checkin' AND '$checkout')) group by p.id";
     }
 
     $sql .= " ORDER BY p.id ASC";

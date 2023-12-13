@@ -34,7 +34,7 @@
       <img src="../img/123123.svg" class="card-img-top" alt="...">
       <div class="card-body">
         <h1 class="card-title" style="font-size: 20px;">Tiền kiếm được: <?= number_format($tien[0]['tongtien'], 0, ',', '.')  ?> Đ</h1>
-        <a href="#" class="btn btn-primary">Chi tiết</a>
+        <a href="index.php?act=sophongdat" class="btn btn-primary">Chi tiết</a>
       </div>
     </div>
     <div class="card col-lg-3 mx-3 mb-5" style="width: 20rem;">

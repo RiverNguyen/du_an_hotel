@@ -1,6 +1,7 @@
 <?php
 ob_start();
 session_start();
+
 include "model/pdo.php";
 include "model/loaiphong.php";
 include "model/dichvu.php";
@@ -15,6 +16,10 @@ $mail = new Mailer();
 
 if (!isset($_SESSION['my-booking'])) {
     $_SESSION['my-booking'] = [];
+}
+
+if (!isset($_SESSION['soluong'])) {
+    $_SESSION['soluong'] = [];
 }
 
 $loaiphong = loadall_loaiphong_home();
@@ -84,6 +89,20 @@ if (isset($_GET['act']) && $_GET['act']) {
             }
             break;
 
+        case 'room-booking':
+            $_SESSION['return_to'] = $_SERVER['REQUEST_URI'];
+            if (isset($_GET['idroom']) && $_GET['idroom']) {
+                $id = $_GET['idroom'];
+                $room = loadone_phong($id);
+                extract($room);
+                $room_cungloai = load_phong_cungloai($id, $idlp);
+                $namelp = load_ten_lp($idlp);
+                include "view/room-detail/room-booking.php";
+            } else {
+                include "view/404/404.php";
+            }
+            break;
+
         case 'sign-up':
             if (isset($_POST['dangky']) && $_POST['dangky']) {
                 $user = $_POST['user'];
@@ -92,8 +111,24 @@ if (isset($_GET['act']) && $_GET['act']) {
                 $pass = $_POST['pass'];
                 $address = $_POST['address'];
                 $tel = $_POST['tel'];
-                insert_user($user, $email, $name, $pass, $address, $tel);
-                $thongbao = "Đăng kí thành công! Vui lòng đăng nhập để thao tác!";
+                if (is_array(checkacc($user))) {
+                    $thongbao = "Tài khoản đã tồn tại. Vui lòng kiểm tra lại!";
+                } else if (is_array(checkemail($email))) {
+                    $thongbao = "Email đã tồn tại. Vui lòng kiểm tra lại!";
+                } else if (strlen($user) < 6) {
+                    $thongbao = "Tài khoản phải có ít nhất 6 kí tự!";
+                } else if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    $thongbao = "Địa chỉ email không hợp lệ!";
+                } else if (strlen($name) < 6) {
+                    $thongbao = "Họ tên phải có ít nhất 6 kí tự!";
+                } else if (strlen($pass) < 6) {
+                    $thongbao = "Mật khẩu phải có ít nhất 6 kí tự!";
+                } else if (!preg_match('/^[0-9]{10,11}$/', $tel)) {
+                    $thongbao = "Số điện thoại không hợp lệ!";
+                } else {
+                    insert_user($user, $email, $name, $pass, $address, $tel);
+                    $thongbao = "Đăng ký thành công! Vui lòng đăng nhập để thao tác!";
+                }
             }
             include "view/user/sign-up.php";
             break;
@@ -115,7 +150,6 @@ if (isset($_GET['act']) && $_GET['act']) {
             break;
 
         case 'sign-in':
-
             if (isset($_POST['dangnhap']) && !empty($_POST['dangnhap'])) {
                 $user = $_POST['user'];
                 $pass = $_POST['pass'];
@@ -158,7 +192,9 @@ if (isset($_GET['act']) && $_GET['act']) {
         case 'verification':
             if (isset($_POST['verify']) && ($_POST['verify'])) {
                 $error = array();
-                if ($_POST['text'] != $_SESSION['code']) {
+                $codeFromSession = isset($_SESSION['code']) ? $_SESSION['code'] : null;
+
+                if ($_POST['text'] != $codeFromSession) {
                     $error['fail'] = "Mã xác nhận không đúng. Vui lòng kiểm tra lại!";
                 } else {
                     header("Location: index.php?act=change-pass");
@@ -168,20 +204,47 @@ if (isset($_GET['act']) && $_GET['act']) {
             break;
 
         case 'change-pass':
+            // Kiểm tra xem đã xác nhận mã và có thông tin về email không
+            if (!isset($_SESSION['code']) || empty($_SESSION['mail'])) {
+                // Nếu không có thông tin, chuyển hướng hoặc xử lý theo logic của bạn
+                header("Location: index.php?act=forgot-pass"); // Ví dụ chuyển hướng về trang chủ
+                exit(); // Đảm bảo dừng script sau lệnh chuyển hướng
+            }
+
+            // Nếu đã xác nhận mã và có thông tin về email, kiểm tra và thực hiện các xử lý đổi mật khẩu
             if (isset($_POST['submit'])) {
                 $error = array();
-                if ($_POST['repass'] != $_POST['newpass']) {
-                    $error['fail'] = "Mật khẩu không trùng khớp. Vui lòng kiểm tra lại!";
+
+                // Kiểm tra xem có email nào đang tồn tại không
+                $email = $_SESSION['mail'];
+                $checkemail = checkemail($email);
+                if (!is_array($checkemail)) {
+                    $error['fail'] = "Email không tồn tại hoặc không xác nhận mã. Vui lòng kiểm tra lại!";
                 } else {
-                    $error['success'] = "Đổi mật khẩu thành công!";
-                    $email = $_SESSION['mail'];
-                    $pass = $_POST['newpass'];
-                    forgot_pass($email, $pass);
-                    header("Location: index.php?act=sign-in");
+                    if ($_POST['repass'] != $_POST['newpass']) {
+                        $error['fail'] = "Mật khẩu không trùng khớp. Vui lòng kiểm tra lại!";
+                    } else {
+                        $error['success'] = "Đổi mật khẩu thành công!";
+                        $email = $_SESSION['mail'];
+                        $pass = $_POST['newpass'];
+                        forgot_pass($email, $pass);
+                        // Thêm mã JavaScript để hiển thị alert và chuyển hướng sau 2 giây
+                        echo '<div style="display:none;">Content to prevent white screen</div>';
+                        echo '<script>
+                                            setTimeout(function() {
+                                                alert("Đổi mật khẩu thành công! Mời bạn đăng nhập lại!");
+                                                window.location.href = "index.php?act=sign-in";
+                                            }, 500);
+                                        </script>';
+                        $_SESSION['code'] = [];
+                        $_SESSION['mail'] = [];
+                        exit(); // Đảm bảo dừng script sau lệnh chuyển hướng
+                    }
                 }
             }
             include "view/user/change-pass.php";
             break;
+
 
         case 'booking-room':
             if (isset($_POST['book']) && ($_POST['book'])) {
@@ -189,24 +252,35 @@ if (isset($_GET['act']) && $_GET['act']) {
                 $name = $_POST['name'];
                 $img = $_POST['img'];
                 $price = $_POST['price'];
-                $soluong = $_POST['soluong'];
+                $_SESSION['soluong'][$id] = $_POST['soluong'][$id];
+                $time = $_POST['time'];
                 $checkin = $_SESSION['date'][0][0];
                 $checkout = $_SESSION['date'][0][1];
                 $days = floor((strtotime($checkout) - strtotime($checkin)) / (60 * 60 * 24));
                 $money = $days * $price * $soluong;
-                $room_add = [$id, $name, $img, $price, $soluong, $checkin, $checkout, $days, $money];
+                $room_add = [$id, $name, $img, $price, $checkin, $checkout, $time, $days, $money];
                 array_push($_SESSION['my-booking'], $room_add);
             }
-            include "view/booking/list-booking.php";
+            header("Location: index.php?act=bill");
             break;
 
-        case 'del-room':
-            if (isset($_GET['idbook'])) {
-                array_splice($_SESSION['my-booking'], $_GET['idbook'], 1);
-            } else {
-                $_SESSION['my-booking'] = [];
+        case 'booking-room-1':
+            if (isset($_POST['book']) && ($_POST['book'])) {
+                $id = $_POST['id'];
+                $name = $_POST['name'];
+                $img = $_POST['img'];
+                $price = $_POST['price'];
+                $_SESSION['soluong'][$id] = $_POST['soluong'][$id];
+                $time = $_POST['time'];
+                $checkin = $_POST['checkin'];
+                $checkout = $_POST['checkout'];
+                $daybook = date('h:i:sa d/m/Y');
+                $days = floor((strtotime($checkout) - strtotime($checkin)) / (60 * 60 * 24));
+                $money = $days * $price * $_SESSION['soluong'][$id];
+                $room_add = [$id, $name, $img, $price, $checkin, $checkout, $time, $days, $money];
+                array_push($_SESSION['my-booking'], $room_add);
             }
-            header("Location: index.php?act=booking-room");
+            header("Location: index.php?act=bill");
             break;
 
         case 'bill':
@@ -215,7 +289,12 @@ if (isset($_GET['act']) && $_GET['act']) {
 
         case 'billconfirm':
             date_default_timezone_set('Asia/Ho_Chi_Minh');
-            if (isset($_POST['confirm']) && ($_POST['confirm'])) {
+            if (isset($_POST['update'])) {
+                foreach ($_POST['soluong'] as $id => $soluong) {
+                    $_SESSION['soluong'][$id] = $soluong;
+                }
+                header("Location: index.php?act=bill");
+            } else if (isset($_POST['confirm']) && ($_POST['confirm'])) {
                 if (isset($_SESSION['user'])) $iduser = $_SESSION['user']['id'];
                 else $id = 0;
                 $name = $_POST['name'];
@@ -224,18 +303,18 @@ if (isset($_GET['act']) && $_GET['act']) {
                 $address = $_POST['address'];
                 $tel = $_POST['tel'];
                 $pttt = 'Thanh toán khi nhận phòng';
-                $total = tongcong();
                 $daybook = date('h:i:sa d/m/Y');
                 foreach ($_SESSION['my-booking'] as $booking) {
                     $id_isbook = insert_bill($iduser, $name, $address, $email, $tel, $daybook);
-                    insert_booking($_SESSION['user']['id'], $booking[0], $booking[2], $booking[1], $booking[3], $booking[4], $booking[5], $booking[6], $booking[8], $pttt, $id_isbook);
+                    insert_booking($_SESSION['user']['id'], $booking[0], $booking[2], $booking[1], $booking[3], $_SESSION['soluong'][$booking[0]], $booking[4], $booking[5], $booking[6], $booking[8], $pttt, $id_isbook);
                     get_current_dadat_value($booking[0]);
-                    update_emtyroom_number($booking[0], $booking[4]);
+                    update_emtyroom_number($booking[0], $_SESSION['soluong'][$booking[0]]);
                 }
                 $_SESSION['my-booking'] = [];
+                $_SESSION['soluong'] = [];
             } else if (isset($_POST['redirect'])) {
                 $vnp_Url = "https://sandbox.vnpayment.vn/paymentv2/vpcpay.html";
-                $vnp_Returnurl = "  http://localhost/test/index.php?act=thanks";
+                $vnp_Returnurl = "http://localhost/hotel_project/index.php?act=thanks";
                 $vnp_TmnCode = "XB4CM42C"; //Mã website tại VNPAY 
                 $vnp_HashSecret = "EOGJTBUVKSBPPWDWRBMCBLGMQDVDQKUU"; //Chuỗi bí mật
 
@@ -361,9 +440,9 @@ if (isset($_GET['act']) && $_GET['act']) {
                     $daybook = date('h:i:sa d/m/Y');
                     foreach ($_SESSION['my-booking'] as $booking) {
                         $id_isbook = insert_bill($iduser, $name, $address, $email, $tel, $daybook);
-                        insert_booking($_SESSION['user']['id'], $booking[0], $booking[2], $booking[1], $booking[3], $booking[4], $booking[5], $booking[6], $booking[8], $pttt, $id_isbook);
+                        insert_booking($_SESSION['user']['id'], $booking[0], $booking[2], $booking[1], $booking[3], $_SESSION['soluong'][$booking[0]], $booking[4], $booking[5], $booking[6], $booking[8], $pttt, $id_isbook);
                         get_current_dadat_value($booking[0]);
-                        update_emtyroom_number($booking[0], $booking[4]);
+                        update_emtyroom_number($booking[0], $_SESSION['soluong'][$booking[0]]);
                     }
                     $_SESSION['my-booking'] = [];
                     header('Location: ' . $vnp_Url);
@@ -372,10 +451,24 @@ if (isset($_GET['act']) && $_GET['act']) {
                     echo json_encode($returnData);
                 }
             }
-
             $bill = loadone_bill($daybook);
             $bill_detail = loadall_booking($daybook);
             include "view/booking/billconfirm.php";
+            break;
+
+        case 'del-room':
+            if (isset($_GET['idbook'])) {
+                $deletedBooking = $_SESSION['my-booking'][$_GET['idbook']];
+                $id = $deletedBooking[0];
+                $quantity = $deletedBooking[7];
+                if (isset($_SESSION['soluong'][$id])) {
+                    $_SESSION['soluong'][$id] -= $quantity;
+                }
+                array_splice($_SESSION['my-booking'], $_GET['idbook'], 1);
+            } else {
+                $_SESSION['my-booking'] = [];
+            }
+            header("Location: index.php?act=bill");
             break;
 
         case 'thanks':

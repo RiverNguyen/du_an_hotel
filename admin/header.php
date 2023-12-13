@@ -1,3 +1,9 @@
+<?php
+if (isset($_SESSION['user'])) {
+    extract($_SESSION['user']);
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -11,7 +17,7 @@
     <link rel="stylesheet" href="../css/plugins.css" />
     <link rel="stylesheet" href="../css/style.css" />
     <link rel="stylesheet" href="../css/more-css.css">
-    <link rel="stylesheet" href="../css/123.css">
+    <link rel="stylesheet" href="../css/oc.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css">
     <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css" rel="stylesheet">
@@ -38,35 +44,70 @@
             <!-- Button -->
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"> <span class="navbar-toggler-icon"><i class="ti-menu"></i></span> </button>
             <!-- Menu -->
-            <div class="collapse navbar-collapse" id="navbar">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="index.php?act=home">Trang chủ</a></li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="index.php?act=addlp" role="button" data-bs-auto-close="outside" aria-expanded="false">Loại Phòng
-                            <i class="ti-angle-down"></i></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="index.php?act=addp" class="dropdown-item"><span>Phòng</span></a></li>
-                        </ul>
-                    </li>
+            <?php if ($role == 1) : ?>
+                <div class="collapse navbar-collapse" id="navbar">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="index.php?act=home">Trang chủ</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="index.php?act=addlp" role="button" data-bs-auto-close="outside" aria-expanded="false">Loại Phòng
+                                <i class="ti-angle-down"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="index.php?act=addp" class="dropdown-item"><span>Phòng</span></a></li>
+                            </ul>
+                        </li>
 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="index.php?act=adddv" role="button" data-bs-auto-close="outside" aria-expanded="false">Dịch vụ
-                            <i class="ti-angle-down"></i></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="index.php?act=addti" class="dropdown-item"><span>Tiện ích</span></a></li>
-                            <li><a href="index.php?act=addgc" class="dropdown-item"><span>Giá cả</span></a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="index.php?act=list-account" role="button" data-bs-auto-close="outside" aria-expanded="false">Khách hàng
-                            <i class="ti-angle-down"></i></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="index.php?act=list-comment" class="dropdown-item"><span>Bình Luận</span></a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="index.php?act=list-bill">Booking</a></li>
-                    <li class="nav-item"><a class="nav-link" href="index.php?act=thongke">Thống kê</a></li>
-                </ul>
-            </div>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="index.php?act=adddv" role="button" data-bs-auto-close="outside" aria-expanded="false">Dịch vụ
+                                <i class="ti-angle-down"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="index.php?act=addti" class="dropdown-item"><span>Tiện ích</span></a></li>
+                                <li><a href="index.php?act=addgc" class="dropdown-item"><span>Giá cả</span></a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="index.php?act=list-account" role="button" data-bs-auto-close="outside" aria-expanded="false">Khách hàng
+                                <i class="ti-angle-down"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="index.php?act=list-comment" class="dropdown-item"><span>Bình Luận</span></a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="index.php?act=list-bill">Booking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="index.php?act=thongke">Thống kê</a></li>
+                    </ul>
+                </div>
+            <?php endif; ?>
+            <?php if ($role == 2) : ?>
+                <div class="collapse navbar-collapse" id="navbar">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="index.php?act=home">Trang chủ</a></li>
+                        <li class="nav-item"><a class="nav-link" href="index.php?act=list-bill">Booking</a></li>
+                        <li class="nav-item"><a class="nav-link" href="index.php?act=thongke">Thống kê</a></li>
+                    </ul>
+                </div>
+            <?php endif; ?>
+            <?php if ($role == 3) : ?>
+                <div class="collapse navbar-collapse" id="navbar">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item"><a class="nav-link" href="index.php?act=home">Trang chủ</a></li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="index.php?act=addlp" role="button" data-bs-auto-close="outside" aria-expanded="false">Loại Phòng
+                                <i class="ti-angle-down"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="index.php?act=addp" class="dropdown-item"><span>Phòng</span></a></li>
+                            </ul>
+                        </li>
+
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="index.php?act=adddv" role="button" data-bs-auto-close="outside" aria-expanded="false">Dịch vụ
+                                <i class="ti-angle-down"></i></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="index.php?act=addti" class="dropdown-item"><span>Tiện ích</span></a></li>
+                                <li><a href="index.php?act=addgc" class="dropdown-item"><span>Giá cả</span></a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item"><a class="nav-link" href="index.php?act=list-bill">Booking</a></li>
+                    </ul>
+                </div>
+            <?php endif; ?>
         </div>
     </nav>

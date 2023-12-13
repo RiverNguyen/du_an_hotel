@@ -13,13 +13,13 @@
         <thead>
             <tr>
                 <th style="text-align: center;">Mã đặt phòng</th>
-                <th style="text-align: center;">Tên phòng</th>
+                <th style="text-align: center;">Tên loại phòng</th>
                 <th style="text-align: center;">Số lượng</th>
                 <th style="text-align: center;">Check in</th>
                 <th style="text-align: center;">Check out</th>
                 <th style="text-align: center;">Ngày đặt</th>
-                <th style="text-align: center;">Tình trạng</th>
                 <th style="text-align: center;">PTTT</th>
+                <th style="text-align: center;">Tình trạng</th>
                 <th style="text-align: center;">Tổng tiền</th>
                 <th style="text-align: center;">Action</th>
             </tr>
@@ -32,7 +32,7 @@
                     extract($bill);
                     $delMyBill = "index.php?act=delmy-bill&id=" . $bill['id'];
                     $modalId = "exampleModal" . $bill['id'];
-                    $ttdh = get_ttdh($bill['trangthai']);
+                    $ttdh = get_ttdh1($bill['trangthai']);
                     $total += $bill['thanhtien'];
                     ?>
                     <tr>
@@ -42,9 +42,9 @@
                         <td><?= $bill['checkin'] ?> </td>
                         <td><?= $bill['checkout'] ?> </td>
                         <td><?= $bill['daybook'] ?> </td>
-                        <td><?= $ttdh ?> </td>
                         <td><?= $bill['pttt'] ?> </td>
-                        <td><?= number_format($bill['thanhtien'], 0, ',', '.')  ?> Đ</td>
+                        <td class="bold"><?= $ttdh ?> </td>
+                        <td class="bold text-danger"><?= number_format($bill['thanhtien'], 0, ',', '.')  ?> Đ</td>
                         <td>
                             <?php if ($bill['trangthai'] == 0) : ?>
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#<?= $modalId ?>">
@@ -63,7 +63,7 @@
                                             </div>
                                             <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Quay lại</button>
-                                                <a href="<?= $delMyBill ?>"><button type="button" class="btn btn-primary">Huỷ</button></a>
+                                                <a href="<?= $delMyBill ?>"><button type="button" class="btn btn-danger">Huỷ</button></a>
                                             </div>
                                         </div>
                                     </div>
@@ -73,7 +73,9 @@
                     <?php elseif ($bill['trangthai'] == 1) : ?>
                         Vui lòng đợi!
                     <?php else : ?>
-                        Đã thanh toán!
+                        <button type="button" class="btn btn-primary">
+                            Đã thanh toán!
+                        </button>
                     <?php endif; ?>
                     </tr>
                 <?php endforeach; ?>

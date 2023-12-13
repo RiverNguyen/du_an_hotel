@@ -70,7 +70,7 @@
              <?php foreach ($dslp as $lp) : ?>
                  <?php
                     extract($lp);
-                    $linkroom = "index.php?act=room-detail&idroom=" . $idp;
+                    $linkroom = "index.php?act=room-booking&idroom=" . $idp;
                     $hinh = $img_p . $img;
                     ?>
                  <div class="col-md-4">
@@ -91,8 +91,16 @@
                              <div class="square-container2">
 
                                  <h6><?= number_format($price, 0, ',', '.') ?>VND / Đêm</h6>
-                                 <h4><?= $name ?></h4>
-                                 <p>Số lượng phòng: <?= ($soluong - $dadat) ?></p>
+                                 <h4><?= $nameroom ?></h4>
+                                 <p>Số lượng phòng:
+                                     <?php if ($soluong > $dadat && isset($_SESSION['soluong'][$idp])) : ?>
+                                         <?= $soluong - $dadat - $_SESSION['soluong'][$idp] ?>
+                                     <?php elseif ($soluong > $dadat) : ?>
+                                         <?= $soluong - $dadat ?>
+                                     <?php else : ?>
+                                         <?= 0 ?>
+                                     <?php endif; ?>
+                                 </p>
                                  <p><?= $mota ?>.</p>
                                  <div class="row room-facilities mb-30">
                                      <div class="col-md-6">

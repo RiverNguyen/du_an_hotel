@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="css/plugins.css" />
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/home.css" />
+    <link rel="stylesheet" href="css/clockpicker.css" />
     <!-- Tailwind CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.7/dist/tailwind.min.css" rel="stylesheet">
 
@@ -105,10 +106,10 @@
                         <li class="nav-item dropdown"> <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-auto-close="outside" aria-expanded="false">Xin chào, <?= $name ?> <i class="ti-angle-down"></i></a>
                             <ul class="dropdown-menu">
                                 <li><a href="index.php?act=my-bill" class="dropdown-item"><span>Đơn đặt của tôi</span></a></li>
-                                <li><a href="index.php?act=booking-room" class="dropdown-item"><span>Danh sách phòng đặt</span></a></li>
+                                <li><a href="index.php?act=bill" class="dropdown-item"><span>Danh sách phòng đặt</span></a></li>
                                 <li><a href="index.php?act=forgot-pass" class="dropdown-item"><span>Quên mật khẩu</span></a></li>
                                 <li><a href="index.php?act=edit-account" class="dropdown-item"><span>Cập nhật tài khoản</span></a></li>
-                                <?php if ($role == 1) : ?>
+                                <?php if ($role != 0) : ?>
                                     <li><a href="admin/index.php" class="dropdown-item"><span>Đăng nhập Admin</span></a></li>
                                 <?php endif; ?>
                                 <li><a href="index.php?act=log-out" class="dropdown-item"><span>Thoát</span></a></li>
