@@ -12,7 +12,7 @@
         <thead>
             <tr>
                 <th style="text-align: center;">Mã đơn hàng</th>
-                <th style="text-align: center;">Mã phòng</th>
+                <th style="text-align: center;">Tên phòng</th>
                 <th style="text-align: center;">Số lượng</th>
                 <th style="text-align: center;">Tên người đặt</th>
                 <th style="text-align: center;">Địa chỉ</th>
@@ -35,31 +35,33 @@
                 ?>
                 <tr>
                     <td>Hotel - <?= $bill['id'] ?></td>
-                    <td><?= $bill['idp'] ?> </td>
+                    <td><?= $bill['name'] ?> </td>
                     <td><?= $bill['soluong'] ?> </td>
                     <td><?= $bill['bill_name'] ?> </td>
                     <td><?= $bill['bill_address'] ?> </td>
                     <td><?= $bill['bill_tel'] ?> </td>
-                    <td><?= $bill['checkin'] ?> </td>
-                    <td><?= $bill['checkout'] ?> </td>
+                    <td><?= date("d/m/Y", strtotime($bill['checkin'])) ?> </td>
+                    <td><?= date("d/m/Y", strtotime($bill['checkout'])) ?> </td>
                     <td><?= $bill['daybook'] ?> </td>
                     <td><?= $pttt ?> </td>
                     <form action="index.php?act=update-bill" method="post">
                         <td>
+                            <input type="hidden" name="soluong" value="<?= $bill['soluong'] ?>">
+                            <input type="hidden" name="idp" value="<?= $bill['idp'] ?>">
                             <input type="hidden" name="id" value="<?= $bill['id'] ?>">
-                            <select class="custom-select <?= 'option-' . $bill['trangthai'] ?>" name="tinhtrang" id="">
+                            <select class="custom-select bold <?= 'option-' . $bill['trangthai'] ?>" name="tinhtrang" id="">
                                 <?php
-                                $trangthai_options = ['0', '1', '2'];
+                                $trangthai_options = ['0', '1', '2', '3'];
                                 foreach ($trangthai_options as $option) :
                                     $ttdh = get_ttdh($option);
                                 ?>
-                                    <option value="<?= $option ?>" <?= ($option == $bill['trangthai']) ? 'selected' : '' ?> class="<?= 'option-' . $option ?>">
+                                    <option class="bold" value="<?= $option ?>" <?= ($option == $bill['trangthai']) ? 'selected' : '' ?> class="<?= 'option-' . $option ?>">
                                         <?= $ttdh ?>
                                     </option>
                                 <?php endforeach ?>
-                            </select>   
+                            </select>
                         </td>
-                        <td><?= number_format($bill['thanhtien'], 0, ',', '.') ?> Đ</td>
+                        <td class="bold text-danger"><?= number_format($bill['thanhtien'], 0, ',', '.') ?> Đ</td>
                         <td>
                             <input style="color: #fff; background-color: #0d6efd; letter-spacing: 0;" type="submit" value="Lưu" name="capnhat" class="btn btn-primary">
                         </td>
@@ -76,3 +78,13 @@
 </div>
 </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('#example').DataTable({
+            order: [
+                [0, 'desc']
+            ]
+        });
+    });
+</script>

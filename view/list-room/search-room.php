@@ -95,7 +95,15 @@
 
                                  <h6><?= number_format($price, 0, ',', '.') ?>VND / Đêm</h6>
                                  <h4><?= $name ?></h4>
-                                 <p>Số lượng phòng: <?= ($soluong - $dadat) ?></p>
+                                 <p>Số lượng phòng:
+                                     <?php if ($soluong > $dadat && isset($_SESSION['soluong'][$id])) : ?>
+                                         <?= $soluong - $dadat - $_SESSION['soluong'][$id] ?>
+                                     <?php elseif ($soluong > $dadat) : ?>
+                                         <?= $soluong - $dadat ?>
+                                     <?php else : ?>
+                                         <?= 0 ?>
+                                     <?php endif; ?>
+                                 </p>
                                  <p><?= $mota ?>.</p>
                                  <div class="row room-facilities mb-30">
                                      <div class="col-md-6">

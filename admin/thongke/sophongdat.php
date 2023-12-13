@@ -26,14 +26,13 @@
         </thead>
         <tbody>
             <?php
-            $totalAmount = 0; // Khởi tạo biến tổng tiền
+            $totalAmount = 0;
 
             foreach ($phongdat as $room) :
                 extract($room);
                 $modalId = "exampleModal" . $id;
                 $ttdh = get_ttdh($room['trangthai']);
 
-                // Tính tổng tiền từ mỗi dòng và cộng vào biến tổng tiền
                 $totalAmount += $room['thanhtien'];
             ?>
                 <tr>
@@ -47,10 +46,10 @@
                     <td><?= $room['checkout'] ?> </td>
                     <td><?= $room['daybook'] ?> </td>
                     <td><?= $pttt ?> </td>
-                    <td class="bold"><?= number_format($room['thanhtien'], 0, ',', '.') ?> Đ</td>
+                    <td class="bold text-danger"><?= number_format($room['thanhtien'], 0, ',', '.') ?> Đ</td>
                 </tr>
             <?php endforeach; ?>
-            <label style="font-size: 24px;" class="block text-sm leading-6 text-gray-900 mb-3">Tổng số tiền là: <label class="text-danger bold"><?= number_format($totalAmount, 0, ',', '.') ?> Đ</label></label>
+            <label style="font-size: 24px;" class="text-danger bold block text-sm leading-6 text-gray-900 mb-3">Tổng số tiền là: <label class="bold"><?= number_format($totalAmount, 0, ',', '.') ?> Đ</label></label>
         </tbody>
     </table>
 

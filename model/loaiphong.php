@@ -5,6 +5,13 @@ function insert_loaiphong($name, $img, $price, $idnl, $idte)
     $sql = "insert into loaiphong(name, img, price, idnl, idte) values('" . $name . "', '" . $img . "', '" . $price . "', '" . $idnl . "', '" . $idte . "')";
     pdo_execute($sql);
 }
+
+function check_loaiphong($name)
+{
+    $sql = "select * from loaiphong where name = '" . $name . "'";
+    $dm = pdo_query_one($sql);
+    return $dm;
+}
 function delete_loaiphong($id)
 {
     $sql = "delete from loaiphong where id= " . $id;

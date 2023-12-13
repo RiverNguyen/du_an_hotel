@@ -29,6 +29,7 @@
         google.charts.setOnLoadCallback(draw1);
         google.charts.setOnLoadCallback(draw2);
         google.charts.setOnLoadCallback(draw3);
+        google.charts.setOnLoadCallback(draw4);
 
         function draw1() {
             var data = google.visualization.arrayToDataTable([
@@ -102,6 +103,23 @@
             var chart3 = new google.charts.Bar(document.getElementById('barchart_material'));
             chart3.draw(data3, google.charts.Bar.convertOptions(options3));
         }
+
+        function draw4() {
+            var data = google.visualization.arrayToDataTable([
+                ['Tên phòng', 'Số bình luận'],
+                <?php foreach ($dsthongke4 as $thongke4) : ?>
+                    <?php extract($thongke4); ?>['<?= $name ?>', <?= $soluong ?>],
+                <?php endforeach; ?>
+            ]);
+
+            var options = {
+                title: 'BIỂU ĐỒ SỐ LƯỢNG BÌNH LUẬN',
+                is3D: true,
+            };
+
+            var chart = new google.visualization.PieChart(document.getElementById('piechart_3d_2'));
+            chart.draw(data, options);
+        }
     </script>
 </head>
 
@@ -110,6 +128,7 @@
         <div class="chart-container" id="piechart_3d_1" style="width: 600px; height: 400px;"></div>
         <div class="chart-container" id="chart_div_2" style="width: 600px; height: 400px;"></div>
         <div class="chart-container" id="barchart_material" style="width: 600px; height: 400px;"></div>
+        <div class="chart-container" id="piechart_3d_2" style="width: 600px; height: 400px;"></div>
     </div>
 </body>
 

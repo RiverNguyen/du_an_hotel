@@ -88,14 +88,15 @@ $modalId = "exampleModal" . $id;
                     <?php if (isset($_SESSION['user']['id'])) : ?>
                         <div class="col-md-12">
                             <?php if ($soluong - $dadat == 0) : ?>
-                                <h2 class="text-danger">Đã hết phòng!</h2>
+                                <h2 style="font-size: 30px;" class="bold text-danger">Đã hết phòng!</h2>
                             <?php elseif (isset($_SESSION['soluong'][$id]) && $soluong - $dadat - $_SESSION['soluong'][$id] == 0) : ?>
-                                <h2 class="text-danger">Đã hết phòng!</h2>
+                                <h2 style="font-size: 30px;" class="bold text-danger">Đã hết phòng!</h2>
                             <?php else : ?>
                                 <button class="btn-booking" type="button" data-bs-toggle="modal" data-bs-target="#<?= $modalId ?>">
                                     Đặt phòng ngay
                                 </button>
                             <?php endif; ?>
+
                         </div>
                     <?php else : ?>
                         <div class="col-md-12">
@@ -113,39 +114,58 @@ $modalId = "exampleModal" . $id;
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form onsubmit="return validateForm()" action="index.php?act=booking-room" method="post">
+                                    <form onsubmit="return validateForm()" action="index.php?act=booking-room-1" method="post">
                                         <div class="sm:col-span-full">
                                             <input type="hidden" name="id" value="<?= $id ?>">
                                             <input type="hidden" name="name" value="<?= $nameroom ?>">
                                             <input type="hidden" name="img" value="<?= $img ?>">
                                             <input type="hidden" name="price" value="<?= $price ?>">
-                                            <div class="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                                                <div class="sm:col-span-3">
-                                                    <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Thời gian nhận:</label>
-                                                    <div class="mt-2">
-                                                        <input style="padding: 6px 12px;" type="time" name="time" id="time" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 me-5">
+                                            <!-- Update the form fields with room ID and check-in/check-out dates -->
+                                            <input type="hidden" name="soluong[<?= $id ?>][id]" value="<?= $id ?>">
+                                            <input type="hidden" name="soluong[<?= $id ?>][checkin]" value="<?= isset($_POST['checkin']) ? ($_POST['checkin']) : ""  ?>">
+                                            <input type="hidden" name="soluong[<?= $id ?>][checkout]" value="<?= isset($_POST['checkout']) ? ($_POST['checkout']) : "" ?>">
+                                            <div class="border-gray-900/10 pb-12">
+                                                <div class="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                                                    <div class="sm:col-span-3">
+                                                        <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Ngày nhận phòng:</label>
+                                                        <div class="mt-2">
+                                                            <input style="padding: 6px 12px;" min="<?= date("Y-m-d") ?>" type="date" name="checkin" id="checkin" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 me-5">
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="sm:col-span-3">
-                                                    <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Số lượng:</label>
-                                                    <div class="mt-2">
-                                                        <input style="padding: 6px 12px;" type="number" name="soluong[<?= $id ?>]" id="soluong" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 me-5">
+                                                    <div class="sm:col-span-3">
+                                                        <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Ngày trả phòng:</label>
+                                                        <div class="mt-2">
+                                                            <input style="padding: 6px 12px;" min="<?= date("Y-m-d") ?>" type="date" name="checkout" id="checkout" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 me-5">
+                                                        </div>
+                                                    </div>
+                                                    <div class="sm:col-span-3">
+                                                        <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Thời gian nhận:</label>
+                                                        <div class="mt-2">
+                                                            <input style="padding: 6px 12px;" type="time" name="time" id="time" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 me-5">
+                                                        </div>
+                                                    </div>
+                                                    <div class="sm:col-span-3">
+                                                        <label for="country" class="block text-sm font-medium leading-6 text-gray-900">Số lượng:</label>
+                                                        <div class="mt-2">
+                                                            <input style="padding: 6px 12px;" type="number" name="soluong[<?= $id ?>]" id="soluong" class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 me-5">
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+
                                 </div>
                                 <div class="modal-footer">
                                     <input type="button" style="background-color: #ccc;" value="Quay lại" class="btn-booking me-3" data-bs-dismiss="modal"></input>
 
                                     <input style="padding: 13px 22px;" type="submit" class="btn-booking" name="book" value="Đồng ý đặt"></input>
-                                    <?php
-                                    if (isset($thongbao)) {
-                                        echo $thongbao;
-                                    }
-                                    ?>
                                 </div>
                                 </form>
+                                <?php
+                                if (isset($thongbao)) {
+                                    echo $thongbao;
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -437,26 +457,43 @@ $modalId = "exampleModal" . $id;
 
 <script>
     function validateForm() {
-        var soluongInput = document.getElementById('soluong');
-        var soluongValue = parseInt(soluongInput.value);
+        var checkinDate = document.getElementById('checkin').value;
+        var checkoutDate = document.getElementById('checkout').value;
+        var quantityInput = document.getElementById('soluong');
+        var quantity = quantityInput.value.trim();
+        var maxAvailableQuantity = <?= $soluong - $dadat ?>;
 
-        // Check if $_SESSION['soluong'][$id] exists
-        var sessionQuantity = <?= isset($_SESSION['soluong'][$id]) ? $_SESSION['soluong'][$id] : 0 ?>;
-
-        if (soluongValue < 1) {
-            alert("Số lượng phòng phải lớn hơn 0");
+        if (checkinDate.trim() === '') {
+            alert('Vui lòng nhập ngày nhận phòng');
             return false;
         }
 
-        var availableQuantity = <?= $soluong - $dadat ?>;
-
-        // Adjust available quantity based on $_SESSION['soluong'][$id]
-        availableQuantity -= sessionQuantity;
-
-        if (soluongValue > availableQuantity) {
-            alert("Số lượng phòng không được lớn hơn số phòng còn lại");
+        if (checkoutDate.trim() === '') {
+            alert('Vui lòng nhập ngày trả phòng');
             return false;
         }
+
+        var checkinDateObj = new Date(checkinDate);
+        var checkoutDateObj = new Date(checkoutDate);
+
+        if (checkoutDateObj <= checkinDateObj) {
+            alert('Ngày trả phòng phải sau ngày nhận phòng');
+            return false;
+        }
+
+        if (quantity === '' || isNaN(quantity) || parseInt(quantity) <= 0) {
+            alert('Vui lòng nhập số lượng hợp lệ (lớn hơn 0)');
+            return false;
+        }
+
+        // Calculate the maximum allowed quantity
+        var maxAllowedQuantity = <?= isset($_SESSION['soluong'][$id]) ?  $soluong - $dadat - $_SESSION['soluong'][$id] : $soluong - $dadat ?>;
+
+        if (quantity > maxAllowedQuantity) {
+            alert('Số lượng phòng không đủ');
+            return false;
+        }
+
         return true;
     }
 </script>

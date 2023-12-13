@@ -16,6 +16,7 @@
                 <th style="text-align: center;">Email</th>
                 <th style="text-align: center;">Địa chỉ</th>
                 <th style="text-align: center;">Số điện thoại</th>
+                <th style="text-align: center;">Quyền</th>
                 <th style="text-align: center;">Action</th>
             </tr>
         </thead>
@@ -23,8 +24,10 @@
             <?php foreach ($listAccount as $account) : ?>
                 <?php
                 extract($account);
+                $updateAcc = "index.php?act=sua-account&id=" . $id;
                 $delAcc = "index.php?act=del-account&id=" . $id;
                 $modalId = "exampleModal" . $id;
+                $role = get_role($role);
                 ?>
                 <tr>
                     <td><?= $id ?></td>
@@ -32,7 +35,9 @@
                     <td><?= $email ?> </td>
                     <td><?= $address ?> </td>
                     <td><?= $tel ?> </td>
+                    <td><?= $role ?> </td>
                     <td>
+                        <a href="<?= $updateAcc?>"><input style="color: #fff; background-color: #0d6efd" type="button" value="Sửa" class="btn btn-primary"></a>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#<?= $modalId ?>">
                             Xoá
                         </button>

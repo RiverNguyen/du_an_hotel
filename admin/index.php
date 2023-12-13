@@ -1,7 +1,7 @@
 <?php
 ob_start();
 session_start();
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] != 1) {
+if (!isset($_SESSION['user']) || $_SESSION['user']['role'] == 0) {
     header('Location: ../index.php');
 }
 include "../model/pdo.php";
@@ -55,8 +55,9 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
                 $idte = $_POST['idte'];
                 $name = $_POST['name'];
                 $price = $_POST['price'];
-
-                if (empty($idnl) || empty($idte) || empty($name) || empty($price)) {
+                if (is_array(check_loaiphong($name))) {
+                    $thongbao = "Loại phòng đã tồn tại";
+                } else if (empty($idnl) || empty($idte) || empty($name) || empty($price)) {
                     $thongbao = "Vui lòng nhập đầy đủ thông tin";
                 } else {
                     $img = $_FILES['img']['name'];
@@ -99,8 +100,8 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
 
         case "updatelp";
             if (isset($_POST['capnhat']) && ($_POST['capnhat'])) {
-                $name = $_POST['name'];
                 $id = $_POST['id'];
+                $name = $_POST['name'];
                 $price = $_POST['price'];
                 $idnl = $_POST['idnl'];
                 $idte = $_POST['idte'];
@@ -110,10 +111,8 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
                 if (move_uploaded_file($_FILES["img"]["tmp_name"], $target_file)) {
                     // File moved successfully.
                 } else {
-                    echo "Error: File could not be moved.";
                 }
                 update_loaiphong($id, $name, $img, $price, $idnl, $idte);
-                $thongbao = "cap nhat thanh cong";
             }
             $dsloaiphong = loadall_loaiphong();
             $listnguoilon = loadall_nguoilon();
@@ -132,6 +131,8 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
                 // Kiểm tra rỗng
                 if (empty($name) || empty($mota) || empty($soluong) || empty($img)) {
                     $thongbao = "Vui lòng điền đầy đủ thông tin.";
+                } else if (is_array(check_phong($name))) {
+                    $thongbao = "Phòng đã tồn tại";
                 } else {
                     // Kiểm tra số lượng phòng là số nguyên dương
                     if (!is_numeric($soluong) || $soluong <= 0 || !filter_var($soluong, FILTER_VALIDATE_INT)) {
@@ -175,6 +176,7 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
         case "xoap":
             if (isset($_GET['id']) && ($_GET['id'] > 0)) {
                 delete_phong($_GET['id']);
+                delete_phong_with_comment($_GET['id']);
             }
             $listphong = loadall_phong();
             include "phong/list.php";
@@ -370,9 +372,34 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
             include "taikhoan/list.php";
             break;
 
+        case "sua-account":
+            if (isset($_GET['id']) && ($_GET['id'] > 0)) {
+                $acc = loadone_taikhoan($_GET['id']);
+            }
+            include "taikhoan/update.php";
+            break;
+
+        case "update-account":
+            if (isset($_POST['capnhat']) && ($_POST['capnhat'])) {
+                $id = $_POST['id'];
+                $user = $_POST['user'];
+                $name = $_POST['name'];
+                $email = $_POST['email'];
+                $pass = $_POST['pass'];
+                $address = $_POST['address'];
+                $tel = $_POST['tel'];
+                $role = $_POST['role'];
+                update_account_admin($id, $user, $name, $email, $pass, $address, $tel, $role);
+                $thongbao = "Cập nhật thành công";
+            }
+            $listAccount = loadall_taikhoan();
+            include "taikhoan/list.php";
+            break;
+
         case "del-account":
             if (isset($_GET['id']) && ($_GET['id'] > 0)) {
                 delete_taikhoan($_GET['id']);
+                delete_comment_user($_GET['id']);
             }
             $listAccount = loadall_taikhoan();
             include "taikhoan/list.php";
@@ -415,9 +442,21 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
             if (isset($_POST['capnhat']) && ($_POST['capnhat'])) {
                 $id = $_POST['id'];
                 $tinhtrang = $_POST['tinhtrang'];
-                update_bill($id, $tinhtrang);
+                $soluong = $_POST['soluong'];
+                $idp = $_POST['idp'];
+                if ($tinhtrang == 3) {
+                    update_soluong_down($idp, $soluong);
+                    update_bill($id, $tinhtrang);
+                } else {
+                    // Kiểm tra trạng thái hiện tại trước khi cập nhật
+                    $currentState = loadone_book($id); // Thay getCurrentState bằng hàm để lấy trạng thái hiện tại
+                    if ($currentState['trangthai'] == 3) {
+                        update_soluong_up($idp, $soluong);
+                    }
+                    update_bill($id, $tinhtrang);
+                }
             }
-            $listBill = loadall_bill_admin($kyw = "", $iduser = 0);
+            $listBill = loadall_bill_admin();
             include "bill/list.php";
             break;
 
@@ -425,6 +464,7 @@ if (isset($_GET['act']) && ($_GET['act'] != "")) {
             $dsthongke = load_thongke_sophong();
             $dsthongke2 = load_thongke_all();
             $dsthongke3 = load_tien_thongke();
+            $dsthongke4 = load_binhluan_thongke();
             include "thongke/bieudo.php";
             break;
     }
